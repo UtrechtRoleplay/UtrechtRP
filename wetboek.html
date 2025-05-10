@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTA Roleplay Wetboek</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            color: #fff;
+            background-color: #0d0d0d;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Header/Navigatie */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: 0.5s;
+            background-color: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 2px 20px rgba(255, 107, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #ff6b00;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ff6b00;
+        }
+
+
+        
+
+        /* Hero Parallax Section */
+        .parallax-hero {
+            position: relative;
+            height: 50vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin-top: 80px;
+        }
+
+        .parallax-hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('wetboek1.png') center/cover no-repeat fixed;
+            z-index: -1;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 0 20px;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+        }
+
+        /* Main Content */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* Sidebar */
+   
+
+   
+
+   
+
+    
+
+     
+
+
+    
+
+        /* Content */
+        .content {
+            flex: 1;
+            padding: 40px;
+            
+            background-color: #0d0d0d;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .law-section {
+            margin-bottom: 60px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .law-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #ff6b00;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .law-section h3 {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #ff9c4d;
+        }
+
+        .law-article {
+            background-color: rgba(30, 30, 30, 0.6);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border-left: 3px solid #ff6b00;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .law-article:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .law-article h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .law-article p {
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .law-article ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .law-article li {
+            margin-bottom: 5px;
+        }
+
+        /* Afkortingen */
+        .abbreviation {
+            color: #ff6b00;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: bold;
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip {
+            visibility: hidden;
+            width: 200px;
+            background-color: #111;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            font-weight: normal;
+            font-size: 14px;
+            text-decoration: none;
+            border: 1px solid #ff6b00;
+        }
+
+        .abbreviation:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Straffen Tabel */
+        .penalty-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .penalty-table th, .penalty-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #333;
+        }
+
+        .penalty-table th {
+            background-color: #1a1a1a;
+            color: #ff6b00;
+            font-weight: bold;
+        }
+
+        .penalty-table tr:nth-child(odd) {
+            background-color: #1a1a1a;
+        }
+
+        .penalty-table tr:nth-child(even) {
+            background-color: #222;
+        }
+
+        .penalty-table tr:hover {
+            background-color: #2a2a2a;
+        }
+
+        /* Search Bar */
+.search-container {
+    display: flex;
+    position: sticky;
+    margin-bottom: 30px;
+    top: 9%;
+    background-color: #111; /* Zwarte achtergrond */
+    padding: 10px 0; /* Voeg wat padding toe zodat het niet te strak is */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Schaduw onder de container */
+    z-index: 10; /* Zorg ervoor dat het boven andere elementen komt */
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: none;
+    background-color: #1a1a1a;
+    color: #fff;
+    border-radius: 5px 0 0 5px;
+    font-size: 16px;
+}
+
+.search-button {
+    padding: 12px 20px;
+    background-color: #ff6b00;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+    transition: 0.3s;
+    font-size: 16px;
+}
+
+.search-button:hover {
+    background-color: #ff8c00;
+}
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: transparent;
+            color: #ccc;
+            border: none;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .tab:hover {
+            color: #ff6b00;
+        }
+
+        .tab.active {
+            color: #ff6b00;
+            border-bottom: 3px solid #ff6b00;
+        }
+
+
+        .sidebar {
+    width: 280px;
+    position: relative;
+    top: 9%;
+    left: 0;
+    bottom: 0;
+    background-color: #0a0a0a;
+    padding: 40px 20px;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.sidebar h2 {
+    color: #ff6b00;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.officer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.officer img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+    border: 2px solid #ff6b00;
+}
+
+.officer p {
+    color: #fff;
+    font-size: 16px;
+    margin: 0;
+}
+
+        /* Footer */
+        footer {
+            background-color: #0a0a0a;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .copyright {
+            color: #777;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+           
+            .content {
+                margin-left: 240px;
+            }
+        }
+
+        @media (max-width: 768px) {
+           
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .nav-links {
+                display: none;
+            }
+            .mobile-menu-icon {
+                display: block;
+                
+            }
+          
+        }
+
+        /* Mobile menu icon */
+        .mobile-menu-icon {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #fff;
+        }
+
+        /* Parallax Effect */
+        .parallax-effect {
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Buttons for expandable content */
+        .expand-btn {
+            background: #1a1a1a;
+            color: #ff6b00;
+            border: 1px solid #ff6b00;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .expand-btn:hover {
+            background: #ff6b00;
+            color: #fff;
+        }
+
+        .expandable-content {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #ff6b00;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+            z-index: 900;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background: #ff8c00;
+            transform: translateY(-5px);
+        }
+
+        .tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+
+mark {
+    background-color: yellow;
+    font-weight: bold;
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo">Utrecht RP</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="wetboek.html">Wetboek</a>
+            <a href="#">Tebex</a>
+            <a href="index.html #contact">Discords</a>
+        </div>
+    </header>
+
+    <!-- Hero Parallax Section -->
+    <section class="parallax-hero">
+        <div class="hero-content">
+            <h1>GTA Roleplay Wetboek</h1>
+            <p>Alle regels en wetten voor een eerlijke en realistische roleplay ervaring</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Sidebar -->
+ 
+<div class="sidebar">
+    <h2>Officieren van Justitie</h2>
+    <div class="officer">
+        <img src="images/officier1.jpg" alt="Officier 1">
+        <p><b>Hoofd OVJ,</b> Mr. Jansen</p>
+    </div>
+    <div class="officer">
+        <img src="images/officier2.jpg" alt="Officier 2">
+        <p><b>OVJ, </b>Mr. De Vries</p>
+    </div>
+    <!-- Voeg meer officieren toe zoals hierboven -->
+</div>
+        <!-- Content -->
+        <div class="content">
+            <!-- Search Section -->
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Zoek in het wetboek...">
+                <button class="search-button">Zoeken</button>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" data-tab="algemeen">APV</button>
+                <button class="tab" data-tab="strafrecht">Wetboek</button>
+                <button class="tab" data-tab="overwereld">Overwereld</button>
+                <button class="tab" data-tab="onderwereld">Onderwereld</button>
+                <button class="tab" data-tab="staff">Staff</button>
+            </div>
+
+            
+<div class="tab-contents">
+    <div class="tab-content active" data-tab-content="algemeen">
+                   <!-- Algemene Regels Section -->
+            <section class="law-section" id="algemene-regels">
+                <h2>Algemene Plaatselijke Verordening UtrechtRP</h2>
+                
+                <div class="law-article">
+                    <h4>Artikel 1.1 - Fundamentele principes</h4>
+                    <p>Alle burgers zijn verplicht om de fundamentele principes van roleplay te respecteren, waaronder:</p>
+                    <ul>
+                        <li>Respecteer andere spelers ten alle tijden</li>
+                        <li>Blijf in character (<span class="abbreviation">IC<span class="tooltip">IC staat voor In Character, wat verwijst naar acties en communicatie die plaatsvinden vanuit je personage binnen de rollenspel omgeving.</span></span>) tijdens interacties in de stad</li>
+                        <li>Gebruik de <span class="abbreviation">OOC<span class="tooltip">OOC staat voor Out Of Character, wat verwijst naar communicatie tussen spelers die niet vanuit hun personage wordt gevoerd maar als speler zelf.</span></span> chat alleen wanneer strikt noodzakelijk</li>
+                        <li>Het gebruik van <span class="abbreviation">VDM<span class="tooltip">VDM staat voor Vehicle Death Match, het opzettelijk gebruiken van een voertuig om iemand te doden zonder geldige roleplay reden.</span></span> en <span class="abbreviation">RDM<span class="tooltip">RDM staat voor Random Death Match, het willekeurig doden van spelers zonder geldige roleplay reden.</span></span> is ten strengste verboden.<br> LET OP: Rent er een speler voor je auto langs op een 50+ km/h weg, dan wordt de VDM gedoogd door de staff.</li>
+                        <li>Nederlands en Engels zijn de 2 voertalen van UtrechtRP, weiger je dit te doen, dan leidt dit tot een ban.</li>
+                    </ul>
+                    <div class="expandable-content" id="artikel-1-1">
+                        <p>Alleen het staff team van de server behoudt zich het recht voor om spelers die deze regels overtreden te bestraffen met een tijdelijke of permanente verbanning van de server. Iedereen moet bijdragen aan een prettige roleplay ervaring voor alle deelnemers.</p>
+                    </div>
+                </div>
+                
+                <div class="law-article">
+                    <h4>Artikel 1.2 - Value of Life</h4>
+                    <p>Alle burgers dienen waarde te hechten aan hun leven. Het niet respecteren van je eigen leven of dat van anderen wordt gezien als <span class="abbreviation">FailRP<span class="tooltip">FailRP staat voor Failing Roleplay, wat betekent dat je niet adequaat roleplayed en de immersie voor andere spelers verstoort.</span></span>. Dit betekent:</p>
+                    <ul>
+                        <li>Als een vuurwapen op je gericht staat, dien je mee te werken, je trekt niet zelf een wapen en praat ook niet in porto</li>
+                        <li>Roekeloos gedrag dat in het echte leven tot de dood zou leiden is verboden</li>
+                        <li>Het plegen van zelfmoord om aan een <span class="abbreviation">scenario<span class="tooltip">Een scenario staat voor een situatie waar 2 of meer spelers beide in roleplay zijn en een situatie uitspelen.</span></span> te ontsnappen is niet toegestaan</li>
+                    </ul>
+                </div>
+
+                <div class="law-article">
+                    <h4>Artikel 1.3 - FailRP</h4>
+                    <p>FailRP staat voor Failing Roleplay, wat betekent dat je niet adequaat roleplayed en de immersie voor andere spelers verstoort. Dit betekent:</p>
+                    <ul>
+                        <li>Slechte roleplay</li>
+                        <li>Bemoeien met een <span class="abbreviation">scenario<span class="tooltip">Een scenario staat voor een situatie waar 2 of meer spelers beide in roleplay zijn en een situatie uitspelen.</span></span> waar jij niets mee te maken hebt</li>
+                        <li>Porto of telefoon gebruiken onder water</li>
+                        <li>Geen <span class="abbreviation">RP<span class="tooltip">RP staat voor roleplay</span></span> doen terwijl je (ernstig) gewond bent</li>
+                        <li>Zonder reden banden lek steken/schieten </li>
+                        <li>Het is niet toegestaan om een dode persoon in het water te leggen (waardoor de ambulance er niet bij kan). Het is echter wel toegestaan om een dode persoon in het bosje of achter in een steegje te leggen</li>
+                        <li>Als je 2x benen bent geschoten mag je niet verder rennen of schieten. Na 30 seconde mag je weer door rennen en schieten</li>
+                        <li>
+  <dl>
+    <dt>Niet <span class="abbreviation">RP<span class="tooltip">RP staat voor roleplay</span></span>’en na zware crashes, o.a.:</dt>
+    <dd>- &nbsp Over de kop gaan met > 95 km/u</dd>
+    <dd>- &nbsp Botsen tegen vaste objecten met > 95 km/u</dd>
+    <dd>- &nbsp Frontale botsing met voertuig met > 95 km/u</dd>
+    <dd>- &nbsp Crashes met motoren boven 55 km/u (ongeacht hoe je valt)</dd>
+    <dd>- &nbsp Van je motor geschoten worden boven 55 km/u</dd>
+    <dd>- &nbsp Geldt ook voor gepantserde voertuigen</dd>
+  </dl>
+</li>
+                        <li>Voertuigstelen tenzij het voertuig onbemand langs de weg staat (geldt niet voor overheids voeruigen)</li>
+                        <li>Campen bij gevoelige locaties (blackmarket is wel toegestaan)</li>
+                        <li>Praten terwijl je dood bent (/me, /do en andere commands tellen ook mee)</li>
+                        <li>Niet meewerken met ambulance personeel na behandeling</li>
+                        <li>Wapens geven/verkopen aan spelers zonder geldige <span class="abbreviation">RP<span class="tooltip">RP staat voor roleplay</span></span></li>
+                        <li><span class="abbreviation">Copbaiting<span class="tooltip">Bewust politie opzoeken, provoceren, of zonder reden verkeersovertredingen begaan</span></span></li>
+                        <li>Overheidskleding/logo’s dragen of je voordoen als overheidsmedewerker zonder het écht te zijn</li>
+                    </ul>
+                </div>
+                
+                <div class="law-article">
+                    <h4>Artikel 1.4 - New Life Rule</h4>
+                    <p>Na overlijden verliest je karakter alle herinneringen aan de gebeurtenissen die tot de dood hebben geleid. Dit betekent:</p>
+                    <ul>
+                        <li>Je mag niet terugkeren naar de locatie waar je bent overleden binnen 15 minuten</li>
+                        <li>Je mag geen wraak nemen voor je dood</li>
+                        <li>Je bent alle informatie vergeten uit de situatie die tot je dood heeft geleid</li>
+                    </ul>
+                </div>
+
+                <div class="law-article">
+                    <h4>Artikel 1.5 - Powergaming</h4>
+                    <p>Powergaming is opzettelijk een onrealistich of oneerlijk voordeel naar jezelf toehalen en situatie manipuleren waardoor andere spelers geen eerlijke/realistische <span class="abbreviation">RP<span class="tooltip">RP staat voor roleplay</span></span> kunnen neerzetten. Dit betekent:</p>
+                    <ul>
+                        <li>In een (Discord) call zitten terwijl je in de stad bent (staffzaken zijn ontheft)</li>
+                        <li>Alle niet-<span class="abbreviation">IG<span class="tooltip">IG staat voor In Game.</span></span> communicatie over <span class="abbreviation">IG<span class="tooltip">IG staat voor In Game.</span></span> zaken</li>
+                        <li>Wegvluchten in je appartement midden in een actief <span class="abbreviation">scenario<span class="tooltip">Een scenario staat voor een situatie waar 2 of meer spelers beide in roleplay zijn en een situatie uitspelen.</span></span></li>
+                        <li>Het, op onrealistiche wijze, gebruik maken van je personage (muren beklimmen/van daken springen)</li>
+                        <li>Binnen 10 minuten na het trekken van een wapen de stad verlaten of je wapen opbergen &nbsp → Let op: dit kan door staff worden aangemerkt als combat log</li>
+                        <li>Iemand naar het eiland brengen om hem daar te doden (<span class="abbreviation">RDM<span class="tooltip">RDM staat voor Random Death Match, het willekeurig doden van spelers zonder geldige roleplay reden.</span></span>-ontwijking)</li>
+                        <li>Emotes gebruiken tijdens een gevecht of beschieting (zoals sleep emotes of lig emotes)</li>
+                        <li>Via third-person over/om een muur heen kijken</li>
+                        <li>Spelers zonder geldige reden vastbinden</li>
+                        <li>Handelingen uitvoeren via /me die ook fysiek in-game kunnen (zoals “/me bind vast”)</li>
+                        <li>Het gebruiken van een onzichtbare lichaamsdelen en kleding(atributen)</li>
+                        <li>Tijdens een shootout je handen omhoog doen om doodschieten te forceren, om vervolgens weg te rennen</li>
+                        <li>Ambtenaren dwingen om een bewusteloze persoon te fouilleren en zijn items af te geven</li>
+                    
+                    </ul>
+                </div>
+
+
+          <div class="law-article">
+                    <h4>Artikel 1.6 - Metagaming</h4>
+                    <p>Metagaming is opzettelijk een onrealistich of oneerlijk voordeel naar jezelf toehalen en situatie manipuleren waardoor andere spelers geen eerlijke/realistische <span class="abbreviation">RP<span class="tooltip">RP staat voor roleplay</span></span> kunnen neerzetten. Dit betekent:</p>
+                    <ul>
+                        <li>In een (Discord) call zitten terwijl je in de stad bent (staffzaken zijn ontheft)</li>
+                        <li>Alle niet-<span class="abbreviation">IG<span class="tooltip">IG staat voor In Game.</span></span> communicatie over <span class="abbreviation">IG<span class="tooltip">IG staat voor In Game.</span></span> zaken</li>
+                        <li>Je scherm delen terwijl je UtrechtRP speelt (Streamen mag, maar wel met een delay)</li>
+                        <li>Informatie over locaties, personen of scenario’s delen via Discord (tenzij hier een bestemd kanaal voor is)</li>
+                        <li>Streamsniping: via een stream kijken wat een andere speler doet en daar voordeel uit halen (om dit te verkomen wordt (zoals eerder vermeld) een delay aanbevolen)</li>
+                    
+                    </ul>
+                </div>
+
+<div class="law-article">
+                    <h4>Artikel 1.7 - Misbruik van in game twitter</h4>
+                    <p>Verboden Twitter berichten:</p>
+                    <ul>
+                        <li>"Welke gang is nog open??"</li>
+                        <li>"Waar kan ik wapens kopen?"</li>
+                        <li>"Paleto 8 AK's wie pusht????"</li>
+                        
+                    
+                    </ul>
+                </div>
+
+                <div class="law-article">
+                    <h4>Artikel 1.8 - Regels rondom scenarios</h4>
+                    <p>Alle vereisten en regels m.b.t. scenario's:</p>
+                    
+                        <h4>Politie Bureau Gijzeling / Overname</h4>
+                       <ul> <li>"Minimaal 5 agenten in dienst"</li>
+                        <li>"Alleen toegestaan om een ganglid of vriend te bevrijden, of voor een massa gijzeling"</li>
+                        <li>"Mag maximaal 1x per 24 uur worden uitgevoerd door dezelfde gang/groep"</li>
+                    
+                    </ul>
+
+                         <h4>Grote Bank Overval</h4>
+                       <ul> <li>"Minimaal 5 agenten in dienst"</li>
+                        <li>"Mag maximaal 1x per 24 uur worden uitgevoerd door dezelfde gang/groep"</li>
+                    
+                    </ul>
+
+                       <h4>Kleine Bank Overval</h4>
+                       <ul> <li>"Minimaal 3 agenten in dienst"</li>
+                        <li>"In-game delay aanwezig"</li>
+                    
+                    </ul>
+                    </ul>
+
+                       <h4>Winkel Overval</h4>
+                       <ul> <li>"Minimaal 3 agenten in dienst"</li>
+                        <li>"In-game delay aanwezig"</li>
+                    
+                    </ul>
+
+
+                </div>
+
+<div class="law-article">
+                    <h4>Artikel 1.9 - GTA-drivestyle</h4>
+                    <p>Het besturen van een voertuig op een onrealistiche manier, zoals dat in de base gta game gebeurt:</p>
+                    <ul>
+                        <li>Het is niet de bedoeling om roekeloos met extreme snelheden (bijv. 250 km/h) door het centrum (BlokkenPark) van de stad te rijden</li>
+                        <li>Onrealistische stunts te maken (bijv. van bergen springen)</li>
+                        <li>Alleen voertuigen met de "SUV"-class of uit de off-road dealer mogen volledig off-road rijden</li>
+                        <li>Offroad banden zijn verplicht ook op een offroad voertuig om offroad te gaan</li>
+                    
+                    </ul>
+                </div>
+
+
+            </section>
+    </div>
+    <div class="tab-content" data-tab-content="strafrecht">
+                    <section class="law-section" id="strafrechtelijke-zaken">
+                <h2>Strafrechtelijke Zaken</h2>
+                
+                <div class="law-article">
+                    <h4>Artikel 2.1 - Geweldsdelicten</h4>
+                    <p>Geweldsdelicten worden zeer serieus genomen binnen de jurisdictie van Los Santos. Hieronder vallen de volgende strafbare feiten:</p>
+                    <ul>
+                        <li>Moord - Het opzettelijk en met voorbedachte rade doden van een persoon</li>
+                        <li>Poging tot moord - Een poging ondernemen om iemand te doden</li>
+                        <li>Doodslag - Het doden van een persoon zonder voorbedachte rade</li>
+                        <li>Mishandeling - Het opzettelijk toebrengen van lichamelijk letsel</li>
+                        <li>Gijzeling - Het tegen iemands wil vasthouden, vaak met een bepaalde eis</li>
+                    </ul>
+                </div>
+                
+                <div class="law-article">
+                    <h4>Artikel 2.2 - Vermogensdelicten</h4>
+                    <p>Vermogensdelicten zijn strafbare feiten gericht op het verkrijgen van (financieel) voordeel. Hieronder vallen:</p>
+                    <ul>
+                        <li>Diefstal - Het wegnemen van goederen zonder toestemming</li>
+                        <li>Inbraak - Het onrechtmatig betreden van een gebouw of woning</li>
+                        <li>Overval - Het met geweld of bedreiging stelen van goederen</li>
+                        <li>Fraude - Het opzettelijk misleiden voor financieel gewin</li>
+                        <li>Verduistering - Het onrechtmatig toe-eigenen van goederen die in beheer zijn</li>
+                    </ul>
+                </div>
+                
+
+
+            <!-- Verkeersregels Section -->
+            <section class="law-section" id="verkeersregels">
+                <h2>Verkeersregels</h2>
+                
+                <div class="law-article">
+                    <h4>Artikel 3.1 - Algemene verkeersregels</h4>
+                    <p>Alle bestuurders dienen zich aan de volgende verkeersregels te houden:</p>
+                    <ul>
+                        <li>Rijd rechts op de weg</li>
+                        <li>Houd je aan de aangegeven maximumsnelheden</li>
+                        <li>Stop voor rood licht en respecteer verkeersborden</li>
+                        <li>Geef voorrang aan hulpdiensten met sirenes</li>
+                        <li>Rijden onder invloed van alcohol of drugs is verboden</li>
+                    </ul>
+                </div>
+                
+                <div class="law-article">
+                    <h4>Artikel 3.2 - Maximumsnelheden</h4>
+                    <p>De volgende maximumsnelheden zijn van kracht binnen Los Santos:</p>
+                    <ul>
+                        <li>Binnen de bebouwde kom: 50 km/u</li>
+                        <li>Buiten de bebouwde kom: 80 km/u</li>
+                        <li>Snelwegen: 120 km/u</li>
+                        <li>Woonwijken: 30 km/u</li>
+                    </ul>
+                    <p>Overschrijding van de maximumsnelheid kan resulteren in een <span class="abbreviation">WOK<span class="tooltip">WOK staat voor Wachten Op Keuring, wat betekent dat je voertuig moet worden gekeurd voordat je er weer mee mag rijden.</span></span> status voor je voertuig of een boete volgens het <span class="abbreviation">CJIB<span class="tooltip">CJIB staat voor Centraal Justitieel Incassobureau, de instantie die verantwoordelijk is voor het innen van boetes.</span></span> systeem.</p>
+                </div>
+            </section>
+
+
+          
+
+            <!-- Wapenwetgeving Section -->
+            <section class="law-section" id="wapenwetgeving">
+                <h2>Wapenwetgeving</h2>
+                
+                <div class="law-article">
+                    <h4>Artikel 4.1 - Categorieën wapens</h4>
+                    <p>Wapens zijn onderverdeeld in de volgende categorieën:</p>
+                    <ul>
+                        <li>Categorie A: Militaire wapens (verboden voor burgers)</li>
+                        <li>Categorie B: Pistolen en revolvers (vergunning vereist)</li>
+                        <li>Categorie C: Jacht- en sportwapens (vergunning vereist)</li>
+                        <li>Categorie D: Steek- en slagwapens (gedeeltelijk toegestaan)</li>
+                    </ul>
+                </div>
+                
+                <div class="law-article">
+                    <h4>Artikel 4.2 - Vergunningen</h4>
+                    <p>Voor het bezitten van vuurwapens is een geldige vergunning vereist, die verkregen kan worden bij het <span class="abbreviation">LRB<span class="tooltip">LRB staat voor Lokaal Registratie Bureau, de instantie verantwoordelijk voor het uitgeven van wapenvergunningen.</span></span>. Vergunningen moeten jaarlijks worden vernieuwd.</p>
+                    <p>Het dragen van een wapen zonder vergunning wordt beschouwd als <span class="abbreviation">WWM<span class="tooltip">WWM staat voor Wet Wapens en Munitie, de wet die het bezit van wapens en munitie reguleert.</span></span> overtreding en kan leiden tot gevangenisstraf.</p>
+                </div>
+            </section>
+
+            <!-- Drugswetgeving Section -->
+            <section class="law-section" id="drugswetgeving">
+                <h2>Drugswetgeving</h2>
+                
+                <div class="law-article">
+                    <h4>Artikel 5.1 - Classificatie van drugs</h4>
+                    <p>Drugs worden geclassificeerd volgens de <span class="abbreviation">OW<span class="tooltip">OW staat voor Opiumwet, de wet die de productie, handel en bezit van drugs reguleert.</span></span> in de volgende lijsten:</p>
+                    <ul>
+                        <li>Lijst I: Harddrugs (heroïne, cocaïne, amfetamine, xtc en GHB.)</li>
+                        <li>Lijst II: Softdrugs (cannabisproducten (hasj en wiet), slaapmiddelen etc.)</li>
+                    </ul>
+                </div>
+                
+                
+            </section>
+
+              <!-- Boetes en Straffen Section -->
+            <section class="law-section" id="boetes-en-straffen">
+                <h2>Boetes en Straffen</h2>
+
+                                <h3>Straffen voor misdrijven</h3>
+                <table class="penalty-table">
+                    <tr>
+                        <th>Misdrijf</th>
+                        <th>Celstraf</th>
+                        <th>Boete</th>
+                    </tr>
+                    <tr>
+                        <td>Moord</td>
+                        <td>60 maanden</td>
+                        <td>$20,000</td>
+                    </tr>
+                    <tr>
+                        <td>Poging tot moord</td>
+                        <td>45 maanden</td>
+                        <td>$15,000</td>
+                    </tr>
+                    <tr>
+                        <td>Doodslag</td>
+                        <td>40 maanden</td>
+                        <td>$12,500</td>
+                    </tr>
+                    <tr>
+                        <td>Mishandeling</td>
+                        <td>20 maanden</td>
+                        <td>$5,000</td>
+                    </tr>
+                    <tr>
+                        <td>Gijzeling</td>
+                        <td>35 maanden</td>
+                        <td>$10,000</td>
+                    </tr>
+                    <tr>
+                        <td>Overval (winkel)</td>
+                        <td>25 maanden</td>
+                        <td>$7,500</td>
+                    </tr>
+                    <tr>
+                        <td>Overval (bank)</td>
+                        <td>50 maanden</td>
+                        <td>$25,000</td>
+                    </tr>
+                    <tr>
+                        <td>Overval (grote bank)</td>
+                        <td>80 maanden</td>
+                        <td>$45,000</td>
+                    </tr>
+                </table>
+            </section>
+
+            <h3>Straffen voor drugszaken</h3>
+                <table class="penalty-table">
+                    <tr>
+                        <th>Misdrijf</th>
+                        <th>Straf</th>
+                    
+                    </tr>
+                    <tr>
+                        <td>Softdrugs (middelgrote hoeveelheid 5–30g)</td>
+                        <td>€350 boete</td>
+                   
+                    </tr>
+                    <tr>
+                        <td>Bezit softdrugs (grote hoeveelheid)	</td>
+                        <td>€2.000 – €5.000 boete en Voorwaardelijke celstraf of taakstraf</td>
+                    
+                    </tr>
+                    <tr>
+                        <td>Bezit harddrugs (kleine hoeveelheid)</td>
+                        <td>€5.000 – €10.000 en 2 – 6 maanden cel (evt. deels voorwaardelijk)</td>
+                     
+                    </tr>
+                    <tr>
+                        <td>Bezit harddrugs (grote hoeveelheid)</td>
+                        <td>€15.000 – €30.000	12 – 36 maanden cel</td>
+                   
+                    </tr>
+                    <tr>
+                        <td>Handel in softdrugs</td>
+                        <td>€5.000 – €10.000 en 6 – 12 maanden cel (deels voorwaardelijk)</td>
+               
+                    </tr>
+                    <tr>
+                        <td>Handel in harddrugs</td>
+                        <td>€20.000 – €50.000 en 24 – 72 maanden cel</td>
+         
+                    </tr>
+                    <tr>
+                        <td>Productie softdrugs (bijv. kwekerij)</td>
+                        <td>€5.000 – €20.000 en 6 – 12 maanden cel (evt. voorwaardelijk)</td>
+                    </tr>
+                    <tr>
+                        <td>Productie harddrugs (bijv. lab)</td>
+                        <td>€50.000 – €100.000 en 3 – 12 jaar cel</td>
+                
+                    </tr>
+                </table>
+            
+            
+                <h3>Boetes voor verkeersovertredingen</h3>
+                <table class="penalty-table">
+                    <tr>
+                        <th>Overtreding</th>
+                        <th>Boetebedrag</th>
+                    </tr>
+                    <tr>
+                        <td>Snelheidsovertreding (0-10 km/u)</td>
+                        <td>$150</td>
+                    </tr>
+                    <tr>
+                        <td>Snelheidsovertreding (11-20 km/u)</td>
+                        <td>$300</td>
+                    </tr>
+                    <tr>
+                        <td>Snelheidsovertreding (21-30 km/u)</td>
+                        <td>$600</td>
+                    </tr>
+                    <tr>
+                        <td>Snelheidsovertreding (31+ km/u)</td>
+                        <td>$1,000 + inbeslagname voertuig</td>
+                    </tr>
+                    <tr>
+                        <td>Door rood licht rijden</td>
+                        <td>$310 + evt. tijdelijk rijverbod</td>
+                    </tr>
+                    <tr>
+                        <td>Rijden zonder rijbewijs</td>
+                        <td>$1,500 + arrestatie</td>
+                    </tr>
+                    <tr>
+                        <td>Alcohol in het verkeer</td>
+                        <td>$1,000 + rijontzegging</td>
+                    </tr>     
+                    <tr>
+                        <td>Fout parkeren</td>
+                        <td>$200</td>
+                    </tr>
+                    </table>            </section>
+</section></div>
+    </div>
+    <div class="tab-content" data-tab-content="overwereld">
+        <p>Informatie over de </p>
+    </div>
+    <div class="tab-content" data-tab-content="onderwereld">
+        <p>Informatie over Justitie</p>
+    </div>
+    <div class="tab-content" data-tab-content="staff">
+        <p>Informatie over staff</p>
+    </div>
+</div>
+
+ 
+
+            <!-- Strafrechtelijke Zaken Section -->
+</div></body>
+
+<script>
+
+        const searchInput = document.querySelector('.search-input');
+    const searchButton = document.querySelector('.search-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    searchButton.addEventListener('click', () => {
+        const query = searchInput.value.toLowerCase();
+
+        // Verberg alle tab contents eerst
+        tabContents.forEach(content => {
+            content.classList.remove('active'); // niet tonen
+            content.innerHTML = content.innerHTML.replace(/<mark>(.*?)<\/mark>/g, '$1'); // verwijder oude markeringen
+        });
+
+        let found = false;
+
+        tabContents.forEach(content => {
+            if (content.textContent.toLowerCase().includes(query)) {
+                content.classList.add('active');
+                highlightText(content, query);
+                found = true;
+            }
+        });
+
+        if (!found) {
+            alert('Geen resultaten gevonden.');
+        }
+    });
+
+    function highlightText(element, query) {
+        const regex = new RegExp(`(${query})`, 'gi');
+        element.innerHTML = element.innerHTML.replace(regex, '<mark>$1</mark>');
+    }
+
+
+    const tabButtons = document.querySelectorAll('.tab');
+
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const target = button.getAttribute('data-tab');
+
+            // Verwijder 'active' van alle knoppen en content
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Voeg 'active' toe aan de geklikte knop en bijbehorende content
+            button.classList.add('active');
+            document.querySelector(`[data-tab-content="${target}"]`).classList.add('active');
+        });
+    });
+</script>
+
+
+</html>
+   
+                                     
