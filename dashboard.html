@@ -703,38 +703,21 @@
   measurementId: "G-ZRF8GZDNLV"
         };
 
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Controleer of gebruiker is ingelogd
+        // ==================== CORE FUNCTIES ====================
+        // Controleer authenticatie
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                // Gebruiker niet ingelogd, terug naar inlogpagina
                 window.location.href = "index.html";
             } else {
-                // Laad gebruikersgegevens
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
-                    
-                    // Update UI met gebruikersinfo
-                    document.getElementById('userName').textContent = userData.name || userData.email;
-                    document.getElementById('userRole').textContent = userData.role;
-                    document.getElementById('userAvatar').textContent = userData.name ? userData.name.charAt(0).toUpperCase() : userData.email.charAt(0).toUpperCase();
-                    document.getElementById('welcomeMessage').textContent = `Welkom terug, ${userData.name || userData.email}`;
-                    
-                    // Update badge op basis van rol
-                    const badge = document.getElementById('userBadge');
-                    badge.textContent = userData.role;
-                    badge.className = `badge rounded-pill bg-${userData.role === 'admin' ? 'primary' : userData.role === 'ceo' ? 'info' : 'success'}`;
-                    
-                    // Toon admin sectie indien van toepassing
-                    if (userData.role === 'admin') {
-                        document.getElementById('adminSection').style.display = 'block';
-                    }
-                    
-                    // Laad dashboard data
+                    updateUI(userData);
                     loadDashboardData(userData.role);
                 }
             }
@@ -746,58 +729,293 @@
             window.location.href = "index.html";
         });
 
+        // ==================== DASHBOARD FUNCTIES ====================
+        async function loadDashboardData(role) {
+            // Werknemers tellen
+            const employeesQuery = query(collection(db, "users"), where("role", "==", "werknemer"));
+            const employeesSnapshot = await getDocs(employeesQuery);
+            document.getElementById('employeesCount').textContent = employeesSnapshot.size;
+
+            // Vacatures tellen
+            const vacanciesSnapshot = await getDocs(collection(db, "vacatures"));
+            document.getElementById('vacanciesCount').textContent = vacanciesSnapshot.size;
+
+            // Sollicitaties tellen
+            const applicationsQuery = query(collection(db, "applications"), where("status", "==", "pending"));
+            const applicationsSnapshot = await getDocs(applicationsQuery);
+            document.getElementById('applicationsCount').textContent = applicationsSnapshot.size;
+
+            // Laad recente activiteiten
+            loadRecentActivities();
+            
+            // Laad verlopen contracten
+            loadExpiringContracts();
+            
+            // Vul dropdowns
+            loadJobDropdowns();
+            
+            // Laad werknemers voor contracten
+            loadEmployeesForContracts();
+        }
+
+        async function loadRecentActivities() {
+            const activities = await getDocs(collection(db, "activities"));
+            const tbody = document.getElementById('recentActivities');
+            tbody.innerHTML = '';
+            
+            activities.forEach(doc => {
+                const activity = doc.data();
+                const row = `
+                    <tr>
+                        <td>${new Date(activity.date).toLocaleDateString()}</td>
+                        <td>${activity.description}</td>
+                        <td><span class="status-badge ${activity.status}">${activity.status}</span></td>
+                        <td><button class="btn btn-sm btn-outline-primary">Bekijken</button></td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        async function loadExpiringContracts() {
+            const contracts = await getDocs(collection(db, "contracts"));
+            const container = document.getElementById('expiringContracts');
+            container.innerHTML = '';
+            
+            contracts.forEach(doc => {
+                const contract = doc.data();
+                if (new Date(contract.endDate) < new Date()) {
+                    const item = `
+                        <div class="alert alert-warning p-2 mb-2">
+                            <strong>${contract.employeeName}</strong> - ${contract.jobTitle}
+                            <small class="d-block">Verlopen op ${new Date(contract.endDate).toLocaleDateString()}</small>
+                        </div>
+                    `;
+                    container.innerHTML += item;
+                }
+            });
+        }
+
+        // ==================== ADMIN FUNCTIES ====================
+        async function promoteToCEO() {
+            const jobId = document.getElementById("jobSelect").value;
+            const email = document.getElementById("promoteEmail").value;
+            
+            if (!jobId || !email) {
+                alert("Selecteer een baan en voer een e-mail in");
+                return;
+            }
+            
+            try {
+                // Zoek gebruiker
+                const usersSnap = await getDocs(query(collection(db, "users"), where("email", "==", email)));
+                if (usersSnap.empty) throw new Error("Gebruiker niet gevonden");
+                
+                const userDoc = usersSnap.docs[0];
+                await updateDoc(doc(db, "users", userDoc.id), {
+                    role: "ceo",
+                    job: jobId
+                });
+                
+                // Update baan met CEO
+                const jobDoc = await getDoc(doc(db, "jobs", jobId));
+                await updateDoc(doc(db, "jobs", jobId), {
+                    ceo: userDoc.data().email,
+                    ceoId: userDoc.id
+                });
+                
+                alert(`${email} is nu CEO van ${jobDoc.data().title}`);
+                $('#promoteModal').modal('hide');
+            } catch (error) {
+                alert(`Fout: ${error.message}`);
+            }
+        }
+
+        async function fireCEO() {
+            const jobId = document.getElementById("fireJobSelect").value;
+            
+            try {
+                const jobDoc = await getDoc(doc(db, "jobs", jobId));
+                if (!jobDoc.exists()) throw new Error("Baan niet gevonden");
+                
+                const jobData = jobDoc.data();
+                if (!jobData.ceoId) throw new Error("Deze baan heeft geen CEO");
+                
+                // Verwijder CEO rol
+                await updateDoc(doc(db, "users", jobData.ceoId), {
+                    role: "werknemer",
+                    job: null
+                });
+                
+                // Verwijder CEO van baan
+                await updateDoc(doc(db, "jobs", jobId), {
+                    ceo: null,
+                    ceoId: null
+                });
+                
+                alert(`CEO van ${jobData.title} is ontslagen`);
+                $('#fireModal').modal('hide');
+            } catch (error) {
+                alert(`Fout: ${error.message}`);
+            }
+        }
+
+        async function addJob() {
+            const title = document.getElementById("jobTitle").value;
+            const description = document.getElementById("jobDescription").value;
+            
+            try {
+                await addDoc(collection(db, "jobs"), {
+                    title,
+                    description,
+                    createdAt: new Date().toISOString()
+                });
+                
+                alert("Baan succesvol toegevoegd!");
+                $('#addJobModal').modal('hide');
+                loadJobDropdowns();
+            } catch (error) {
+                alert(`Fout: ${error.message}`);
+            }
+        }
+
+        // ==================== VACATURE FUNCTIES ====================
+        async function addVacancy() {
+            const title = document.getElementById("vacancyTitle").value;
+            const jobId = document.getElementById("vacancyJob").value;
+            const description = document.getElementById("vacancyDescription").value;
+            const requirements = document.getElementById("vacancyRequirements").value;
+            
+            try {
+                const jobDoc = await getDoc(doc(db, "jobs", jobId));
+                await addDoc(collection(db, "vacatures"), {
+                    title,
+                    jobId,
+                    jobTitle: jobDoc.data().title,
+                    description,
+                    requirements,
+                    status: "open",
+                    createdAt: new Date().toISOString()
+                });
+                
+                alert("Vacature succesvol geplaatst!");
+                $('#addVacancyModal').modal('hide');
+                loadDashboardData();
+            } catch (error) {
+                alert(`Fout: ${error.message}`);
+            }
+        }
+
+        // ==================== CONTRACT FUNCTIES ====================
+        async function addContract() {
+            const employeeId = document.getElementById("contractEmployee").value;
+            const jobId = document.getElementById("contractJob").value;
+            const salary = document.getElementById("contractSalary").value;
+            const startDate = document.getElementById("contractStartDate").value;
+            const endDate = document.getElementById("contractEndDate").value;
+            const terms = document.getElementById("contractTerms").value;
+            
+            try {
+                // Haal gebruiker en baan op
+                const [userDoc, jobDoc] = await Promise.all([
+                    getDoc(doc(db, "users", employeeId)),
+                    getDoc(doc(db, "jobs", jobId))
+                ]);
+                
+                await addDoc(collection(db, "contracts"), {
+                    employeeId,
+                    employeeName: userDoc.data().name,
+                    jobId,
+                    jobTitle: jobDoc.data().title,
+                    salary,
+                    startDate,
+                    endDate,
+                    terms,
+                    signed: false,
+                    createdAt: new Date().toISOString()
+                });
+                
+                alert("Contract succesvol aangemaakt!");
+                $('#addContractModal').modal('hide');
+                loadDashboardData();
+            } catch (error) {
+                alert(`Fout: ${error.message}`);
+            }
+        }
+
+        // ==================== HELPER FUNCTIES ====================
+        async function loadJobDropdowns() {
+            const jobsSnapshot = await getDocs(collection(db, "jobs"));
+            const dropdowns = [
+                "jobSelect", "fireJobSelect", "vacancyJob", 
+                "contractJob", "employeeJob"
+            ];
+            
+            dropdowns.forEach(id => {
+                const select = document.getElementById(id);
+                if (select) {
+                    select.innerHTML = '';
+                    jobsSnapshot.forEach(doc => {
+                        const option = document.createElement('option');
+                        option.value = doc.id;
+                        option.textContent = doc.data().title;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        async function loadEmployeesForContracts() {
+            const select = document.getElementById("contractEmployee");
+            const employeesSnapshot = await getDocs(query(collection(db, "users"), where("role", "==", "werknemer")));
+            
+            select.innerHTML = '';
+            employeesSnapshot.forEach(doc => {
+                const option = document.createElement('option');
+                option.value = doc.id;
+                option.textContent = doc.data().name || doc.data().email;
+                select.appendChild(option);
+            });
+        }
+
+        function updateUI(userData) {
+            document.getElementById('userName').textContent = userData.name || userData.email;
+            document.getElementById('userRole').textContent = userData.role;
+            document.getElementById('userAvatar').textContent = userData.name ? userData.name.charAt(0).toUpperCase() : userData.email.charAt(0).toUpperCase();
+            document.getElementById('welcomeMessage').textContent = `Welkom terug, ${userData.name || userData.email}`;
+            
+            const badge = document.getElementById('userBadge');
+            badge.textContent = userData.role;
+            badge.className = `badge rounded-pill bg-${userData.role === 'admin' ? 'primary' : userData.role === 'ceo' ? 'info' : 'success'}`;
+            
+            if (userData.role === 'admin') {
+                document.getElementById('adminSection').style.display = 'block';
+            }
+        }
+
+        // ==================== EVENT LISTENERS ====================
+        document.getElementById('promoteBtn')?.addEventListener('click', promoteToCEO);
+        document.getElementById('fireBtn')?.addEventListener('click', fireCEO);
+        document.getElementById('addJobBtn')?.addEventListener('click', addJob);
+        document.getElementById('addVacancyBtn')?.addEventListener('click', addVacancy);
+        document.getElementById('addContractBtn')?.addEventListener('click', addContract);
+        
         // Sidebar navigatie
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
-                
-                // Verwijder active class van alle links
-                document.querySelectorAll('.nav-link').forEach(el => {
-                    el.classList.remove('active');
-                });
-                
-                // Voeg active class toe aan geklikte link
+                document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
                 this.classList.add('active');
                 
-                // Verberg alle secties
                 document.querySelectorAll('main > div').forEach(section => {
                     section.style.display = 'none';
                 });
                 
-                // Toon geselecteerde sectie
                 const sectionId = this.getAttribute('data-section') + 'Section';
                 document.getElementById(sectionId).style.display = 'block';
             });
         });
-
-        // Laad dashboard data
-        async function loadDashboardData(role) {
-            // Voorbeeld: Laad werknemers
-            const employeesSnapshot = await getDocs(collection(db, "users"));
-            document.getElementById('employeesCount').textContent = employeesSnapshot.size;
-            
-            // Voorbeeld: Laad vacatures
-            const vacanciesSnapshot = await getDocs(collection(db, "vacatures"));
-            document.getElementById('vacanciesCount').textContent = vacanciesSnapshot.size;
-            
-            // Voorbeeld: Laad sollicitaties
-            const applicationsQuery = query(collection(db, "applications"), where("status", "==", "pending"));
-            const applicationsSnapshot = await getDocs(applicationsQuery);
-            document.getElementById('applicationsCount').textContent = applicationsSnapshot.size;
-            
-            // Hier zou je meer data kunnen laden afhankelijk van de rol
-        }
-
-        // Voeg hier alle andere functies toe (promoteToCEO, addJob, etc.)
-        // Deze zouden hetzelfde zijn als in de vorige versie
-        
-        // Event listeners voor modals
-        document.getElementById('promoteBtn')?.addEventListener('click', promoteToCEO);
-        document.getElementById('fireBtn')?.addEventListener('click', fireCEO);
-        document.getElementById('addJobBtn')?.addEventListener('click', addJob);
-        document.getElementById('addEmployeeBtn')?.addEventListener('click', addEmployee);
-        document.getElementById('addVacancyBtn')?.addEventListener('click', addVacancy);
-        document.getElementById('addContractBtn')?.addEventListener('click', addContract);
     </script>
+
 </body>
 </html>
