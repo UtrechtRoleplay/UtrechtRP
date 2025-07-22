@@ -2,19 +2,287 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Roleplay App - Login</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Roleplay App - Login & Registratie</title>
+  <style>
+    /* ==== STYLE ==== */
+
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      margin: 0; padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 2rem 3rem;
+      width: 320px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: 1.2px;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 1.5rem;
+      justify-content: center;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 0.75rem 0;
+      cursor: pointer;
+      font-weight: 600;
+      color: #ccc;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+      user-select: none;
+    }
+
+    .tab.active {
+      color: #fff;
+      border-bottom: 3px solid #fff;
+    }
+
+    form {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    form.active {
+      display: flex;
+    }
+
+    input {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: background-color 0.3s ease;
+    }
+
+    input::placeholder {
+      color: #999;
+    }
+
+    input:focus {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    button {
+      background: #fff;
+      color: #764ba2;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #f0f0f0;
+    }
+
+    #msg {
+      margin-top: 1rem;
+      min-height: 1.5em;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      color: #ff6b6b;
+      user-select: none;
+      min-height: 1.5em;
+    }
+
+    /* Animatie fadeIn */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+  </style>
 </head>
 <body>
-  <h2>Login / Registratie</h2>
-  <input type="email" id="email" placeholder="E-mail" />
-  <input type="password" id="password" placeholder="Wachtwoord" />
-  <button id="loginBtn">Login</button>
-  <button id="registerBtn">Registreren</button>
+  <div class="container">
+    <h2>Roleplay App</h2>
 
-  <p id="msg"></p>
+    <div class="tabs">
+      <div id="tab-login" class="tab active" tabindex="0" role="button" aria-selected="true" aria-controls="login-form">Inloggen</div>
+      <div id="tab-register" class="tab" tabindex="0" role="button" aria-selected="false" aria-controls="register-form">Registreren</div>
+    </div>
 
-  <script type="module" src="app.js"></script>
+    <form id="login-form" class="active" aria-hidden="false">
+      <input type="email" id="login-email" placeholder="E-mail" required autocomplete="username" />
+      <input type="password" id="login-password" placeholder="Wachtwoord" required autocomplete="current-password" />
+      <button type="submit">Inloggen</button>
+    </form>
+
+    <form id="register-form" aria-hidden="true">
+      <input type="email" id="register-email" placeholder="E-mail" required autocomplete="username" />
+      <input type="password" id="register-password" placeholder="Wachtwoord" required autocomplete="new-password" />
+      <button type="submit">Registreren</button>
+    </form>
+
+    <p id="msg" role="alert" aria-live="polite"></p>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { firebaseConfig } from './firebase-config.js';
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const tabs = {
+    login: document.getElementById('tab-login'),
+    register: document.getElementById('tab-register'),
+  };
+
+  const forms = {
+    login: document.getElementById('login-form'),
+    register: document.getElementById('register-form'),
+  };
+
+  const msg = document.getElementById('msg');
+
+  function setActiveTab(tabName) {
+    for (const key in tabs) {
+      if (key === tabName) {
+        tabs[key].classList.add('active');
+        tabs[key].setAttribute('aria-selected', 'true');
+        forms[key].classList.add('active');
+        forms[key].setAttribute('aria-hidden', 'false');
+      } else {
+        tabs[key].classList.remove('active');
+        tabs[key].setAttribute('aria-selected', 'false');
+        forms[key].classList.remove('active');
+        forms[key].setAttribute('aria-hidden', 'true');
+      }
+    }
+    msg.textContent = '';
+  }
+
+  tabs.login.addEventListener('click', () => setActiveTab('login'));
+  tabs.register.addEventListener('click', () => setActiveTab('register'));
+
+  Object.values(tabs).forEach(tab => {
+    tab.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        tab.click();
+      }
+    });
+  });
+
+  // Login functie
+  forms.login.addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value.trim();
+
+    if (!email || !password) {
+      msg.style.color = '#ff6b6b';
+      msg.textContent = 'Vul alstublieft e-mail en wachtwoord in.';
+      return;
+    }
+
+    msg.style.color = '#fff';
+    msg.textContent = 'Inloggen...';
+
+    try {
+      const userCred = await signInWithEmailAndPassword(auth, email, password);
+      // Na login kun je eventueel data ophalen:
+      const uid = userCred.user.uid;
+      const userDoc = await getDoc(doc(db, "users", uid));
+      if (!userDoc.exists()) {
+        msg.style.color = '#ff6b6b';
+        msg.textContent = 'Gebruikersdata niet gevonden, neem contact op met beheer.';
+        return;
+      }
+      const data = userDoc.data();
+
+      msg.style.color = '#4ade80'; // groen
+      msg.textContent = `Welkom terug, ${data.email} (${data.role})!`;
+
+      // Je kan hier navigeren, bv:
+      // window.location.href = "dashboard.html";
+
+    } catch(err) {
+      msg.style.color = '#ff6b6b';
+      msg.textContent = 'Fout bij inloggen: ' + err.message;
+    }
+  });
+
+  // Registratie functie
+  forms.register.addEventListener('submit', async e => {
+    e.preventDefault();
+    const email = document.getElementById('register-email').value.trim();
+    const password = document.getElementById('register-password').value.trim();
+
+    if (!email || !password) {
+      msg.style.color = '#ff6b6b';
+      msg.textContent = 'Vul alstublieft e-mail en wachtwoord in.';
+      return;
+    }
+
+    msg.style.color = '#fff';
+    msg.textContent = 'Registreren...';
+
+    try {
+      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = userCred.user.uid;
+      // Stel rol in: admin als jouw e-mail, anders werknemer
+      const role = (email === "ohaarens@gmail.com") ? "admin" : "werknemer";
+
+      await setDoc(doc(db, "users", uid), {
+        email,
+        role
+      });
+
+      msg.style.color = '#4ade80';
+      msg.textContent = `Registratie succesvol! Welkom, ${email} (${role})!`;
+
+      // Hier eventueel doorsturen naar dashboard
+       window.location.href = "dashboard.html";
+
+    } catch(err) {
+      msg.style.color = '#ff6b6b';
+      msg.textContent = 'Fout bij registratie: ' + err.message;
+    }
+  });
+
+</script>
+
 </body>
 </html>
