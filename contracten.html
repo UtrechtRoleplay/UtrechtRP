@@ -3,1185 +3,385 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRM Systeem</title>
+    <title>HRM Systeem - Inloggen</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .navbar-brand {
-            font-weight: bold;
+        
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+            animation: fadeIn 0.6s ease;
         }
-        .welcome-banner {
+        
+        .auth-header {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: white;
-            padding: 2rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px 20px;
+            text-align: center;
         }
-        .card {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+        
+        .auth-header h2 {
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+        
+        .auth-body {
+            padding: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-control {
+            border-radius: 12px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.2);
+        }
+        
+        .btn {
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             border: none;
         }
-        .card-header {
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #eee;
-            font-weight: 600;
-            border-radius: 10px 10px 0 0 !important;
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
         }
-        .admin-card {
-            border-left: 4px solid #6a11cb;
+        
+        .btn-outline-secondary {
+            border: 1px solid #e0e0e0;
         }
-        .ceo-card {
-            border-left: 4px solid #2575fc;
+        
+        .password-container {
+            position: relative;
         }
-        .employee-card {
-            border-left: 4px solid #28a745;
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #777;
         }
-        .vacature-card {
-            border-left: 4px solid #ffc107;
-        }
-        .contract-card {
-            transition: all 0.3s ease;
-        }
-        .contract-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        .active-contract {
-            background-color: #f0fff4;
-        }
-        .expired-contract {
-            background-color: #fff8f0;
-        }
-        .badge-pending {
-            background-color: #ffc107;
-            color: #212529;
-        }
-        .badge-accepted {
-            background-color: #28a745;
-            color: white;
-        }
-        .badge-rejected {
-            background-color: #dc3545;
-            color: white;
-        }
-        .application-item {
-            transition: all 0.3s ease;
-        }
-        .application-item:hover {
-            background-color: #f8f9fa;
-        }
-        .form-control, .form-select {
-            border-radius: 8px;
+        
+        .status-message {
+            text-align: center;
             padding: 10px;
-        }
-        .btn {
             border-radius: 8px;
-            padding: 10px 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .status-message.success {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            display: block;
+        }
+        
+        .status-message.error {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            display: block;
+        }
+        
+        .additional-links {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .additional-links a {
+            color: #6a11cb;
+            text-decoration: none;
             font-weight: 500;
         }
-        .modal-content {
-            border-radius: 10px;
+        
+        .features {
+            display: flex;
+            margin-top: 30px;
+            gap: 15px;
         }
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 20px;
-            border-radius: 10px;
-            background: white;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        
+        .feature {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+            background: rgba(106, 17, 203, 0.05);
+        }
+        
+        .feature i {
+            font-size: 1.8rem;
+            color: #6a11cb;
+            margin-bottom: 10px;
+        }
+        
+        .feature h5 {
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+        }
+        
+        .feature p {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 576px) {
+            .auth-container {
+                margin: 20px;
+                max-width: 100%;
+            }
+            
+            .features {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Inlogpagina -->
-    <div id="loginPage" class="container">
-        <div class="login-container">
-            <h2 class="text-center mb-4">HRM Systeem</h2>
-            <div id="msg" class="alert alert-danger d-none"></div>
-            <div class="mb-3">
-                <label for="email" class="form-label">E-mailadres</label>
-                <input type="email" id="email" class="form-control" placeholder="email@voorbeeld.nl">
+    <div class="auth-container">
+        <div class="auth-header">
+            <div class="logo">
+                <i class="fas fa-users"></i>
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Wachtwoord</label>
-                <input type="password" id="password" class="form-control" placeholder="Wachtwoord">
-            </div>
-            <div class="d-grid gap-2 mb-3">
-                <button id="loginBtn" class="btn btn-primary">Inloggen</button>
-            </div>
-            <div class="d-grid gap-2">
-                <button id="registerBtn" class="btn btn-secondary">Registreren</button>
-            </div>
+            <h2>HRM Systeem</h2>
+            <p>Personeelsbeheer op het hoogste niveau</p>
         </div>
-    </div>
-
-    <!-- Dashboard Pagina -->
-    <div id="dashboardPage" class="d-none">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="#">HRM Systeem</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" id="dashboardLink">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" onclick="logout()">Uitloggen</a>
-                        </li>
-                    </ul>
+        
+        <div class="auth-body">
+            <div class="status-message" id="msg"></div>
+            
+            <div id="loginForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">E-mailadres</label>
+                    <input type="email" id="email" class="form-control" placeholder="email@voorbeeld.nl">
                 </div>
-            </div>
-        </nav>
-
-        <div class="container mt-4">
-            <div id="welcome" class="mb-4"></div>
-            <div id="content"></div>
-        </div>
-    </div>
-
-    <!-- Modals -->
-    <!-- Promote to CEO Modal -->
-    <div class="modal fade" id="promoteModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">CEO Aanstellen</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="jobSelect" class="form-label">Selecteer Baan</label>
-                        <select id="jobSelect" class="form-select"></select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="promoteEmail" class="form-label">E-mailadres werknemer</label>
-                        <input type="email" id="promoteEmail" class="form-control" placeholder="email@voorbeeld.nl">
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Wachtwoord</label>
+                    <div class="password-container">
+                        <input type="password" id="password" class="form-control" placeholder="Uw wachtwoord">
+                        <span class="password-toggle" id="togglePassword">
+                            <i class="far fa-eye"></i>
+                        </span>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="promoteBtn" class="btn btn-primary">Aanstellen</button>
+                
+                <div class="d-grid gap-2 mb-3">
+                    <button id="loginBtn" class="btn btn-primary">Inloggen</button>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button id="registerBtn" class="btn btn-outline-secondary">Registreren</button>
+                </div>
+                
+                <div class="additional-links mt-3">
+                    <a href="#" id="forgotPassword">Wachtwoord vergeten?</a>
+                </div>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-shield-alt"></i>
+                    <h5>Veilig</h5>
+                    <p>Gegevensbescherming gegarandeerd</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <h5>Snel</h5>
+                    <p>Efficiënte workflows</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-sync-alt"></i>
+                    <h5>Realtime</h5>
+                    <p>Altijd up-to-date</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Fire CEO Modal -->
-    <div class="modal fade" id="fireModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">CEO Ontslaan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="fireJobSelect" class="form-label">Selecteer Baan</label>
-                        <select id="fireJobSelect" class="form-select"></select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="fireBtn" class="btn btn-danger">Ontslaan</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script type="module">
+        // Importeer Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        
+        // Firebase configuratie
+        const firebaseConfig = {
+            apiKey: "AIzaSyABC123XYZ456DEF789ghi",
+            authDomain: "jouw-project.firebaseapp.com",
+            projectId: "jouw-project",
+            storageBucket: "jouw-project.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890"
+        };
 
-    <!-- Add Job Modal -->
-    <div class="modal fade" id="addJobModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Nieuwe Baan Toevoegen</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="jobTitle" class="form-label">Baan Titel</label>
-                        <input type="text" id="jobTitle" class="form-control" placeholder="Bijv. Verkoop Manager">
-                    </div>
-                    <div class="mb-3">
-                        <label for="jobDescription" class="form-label">Omschrijving</label>
-                        <textarea id="jobDescription" class="form-control" rows="3" placeholder="Taken en verantwoordelijkheden"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="addJobBtn" class="btn btn-primary">Toevoegen</button>
-                </div>
-            </div>
-        </div>
-    </div>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-    <!-- Add Vacature Modal -->
-    <div class="modal fade" id="addVacatureModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Nieuwe Vacature Plaatsen</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="vacatureTitle" class="form-label">Titel</label>
-                        <input type="text" id="vacatureTitle" class="form-control" placeholder="Bijv. Senior Developer">
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacatureJobSelect" class="form-label">Selecteer Baan</label>
-                        <select id="vacatureJobSelect" class="form-select"></select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacatureDescription" class="form-label">Omschrijving</label>
-                        <textarea id="vacatureDescription" class="form-control" rows="3" placeholder="Functieomschrijving"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacatureRequirements" class="form-label">Eisen</label>
-                        <textarea id="vacatureRequirements" class="form-control" rows="3" placeholder="Vereiste kwalificaties"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="addVacatureBtn" class="btn btn-primary">Plaatsen</button>
-                </div>
-            </div>
-        </div>
-    </div>
+        // DOM elementen
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const msgElement = document.getElementById('msg');
+        const togglePassword = document.getElementById('togglePassword');
 
-    <!-- Add Contract Modal -->
-    <div class="modal fade" id="addContractModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Nieuw Contract Aanmaken</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="contractEmployee" class="form-label">Werknemer</label>
-                        <select id="contractEmployee" class="form-select"></select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="contractJob" class="form-label">Baan</label>
-                        <select id="contractJob" class="form-select"></select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="contractSalary" class="form-label">Salaris</label>
-                        <input type="text" id="contractSalary" class="form-control" placeholder="Bijv. €3000 per maand">
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="contractStartDate" class="form-label">Startdatum</label>
-                            <input type="date" id="contractStartDate" class="form-control">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="contractEndDate" class="form-label">Einddatum</label>
-                            <input type="date" id="contractEndDate" class="form-control">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="contractTerms" class="form-label">Voorwaarden</label>
-                        <textarea id="contractTerms" class="form-control" rows="3" placeholder="Contractuele voorwaarden"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="addContractBtn" class="btn btn-primary">Aanmaken</button>
-                </div>
-            </div>
-        </div>
-    </div>
+        // Wachtwoord zichtbaarheid
+        togglePassword.addEventListener('click', () => {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            togglePassword.innerHTML = type === 'password' ? 
+                '<i class="far fa-eye"></i>' : 
+                '<i class="far fa-eye-slash"></i>';
+        });
 
-    <!-- Apply Modal -->
-    <div class="modal fade" id="applyModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Solliciteren</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="applyVacatureInfo"></div>
-                    <div class="mb-3">
-                        <label for="applyMotivation" class="form-label">Motivatie</label>
-                        <textarea id="applyMotivation" class="form-control" rows="5" placeholder="Waarom bent u geschikt voor deze functie?"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="applyBtn" class="btn btn-primary">Verzenden</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Firebase scripts hier (zoals in vorig antwoord) -->
-   
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, updateDoc, addDoc, collection, getDocs, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-    import { firebaseConfig } from './firebase-config.js';
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    const msg = document.getElementById("msg");
-    const promoteModal = new bootstrap.Modal(document.getElementById('promoteModal'));
-    const fireModal = new bootstrap.Modal(document.getElementById('fireModal'));
-    const addJobModal = new bootstrap.Modal(document.getElementById('addJobModal'));
-    const addVacatureModal = new bootstrap.Modal(document.getElementById('addVacatureModal'));
-    const addContractModal = new bootstrap.Modal(document.getElementById('addContractModal'));
-    const applyModal = new bootstrap.Modal(document.getElementById('applyModal'));
-
-    // Globale variabelen voor sollicitatie
-    let currentVacatureId = null;
-
-    // Helper functies
-    function getStatusBadgeClass(status) {
-        switch(status) {
-            case 'pending': return 'badge-pending';
-            case 'accepted': return 'badge-accepted';
-            case 'rejected': return 'badge-rejected';
-            default: return 'badge-secondary';
+        // Toon bericht
+        function showMessage(text, type) {
+            msgElement.textContent = text;
+            msgElement.className = `status-message ${type}`;
         }
-    }
 
-    function formatDate(dateString) {
-        if (!dateString) return 'Onbekend';
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('nl-NL', options);
-    }
-
-    function isContractActive(contract) {
-        if (!contract.startDate || !contract.endDate) return false;
-        const now = new Date();
-        const start = new Date(contract.startDate);
-        const end = new Date(contract.endDate);
-        return now >= start && now <= end;
-    }
-
-    // Authenticatie functies
-    async function login() {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        try {
-            const userCred = await signInWithEmailAndPassword(auth, email, password);
-            window.location.href = "dashboard.html";
-        } catch (err) {
-            msg.textContent = "Fout bij inloggen: " + err.message;
-        }
-    }
-
-    async function register() {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        try {
-            const userCred = await createUserWithEmailAndPassword(auth, email, password);
-            const uid = userCred.user.uid;
-            const role = (email === "admin@voorbeeld.nl") ? "admin" : "werknemer";
-            await setDoc(doc(db, "users", uid), {
-                email,
-                role,
-                name: email.split('@')[0]
-            });
-            window.location.href = "dashboard.html";
-        } catch (err) {
-            msg.textContent = "Fout bij registratie: " + err.message;
-        }
-    }
-
-    async function logout() {
-        await signOut(auth);
-        window.location.href = "index.html";
-    }
-
-    // Dashboard functies
-    auth.onAuthStateChanged(async user => {
-        if (!user) return;
-
-        const uid = user.uid;
-        const snap = await getDoc(doc(db, "users", uid));
-        const data = snap.data();
-        if (!data) return;
-
-        const welcome = document.getElementById("welcome");
-        if (welcome) welcome.textContent = `Welkom ${data.email} (${data.role})`;
-
-        const content = document.getElementById("content");
-        if (!content) return;
-
-        // Laad de juiste content gebaseerd op rol
-        if (data.role === "werknemer") {
-            loadEmployeeDashboard(uid);
-        } else if (data.role === "ceo") {
-            loadCEODashboard(uid, data.job);
-        } else if (data.role === "admin") {
-            loadAdminDashboard(uid);
-        }
-    });
-
-    async function loadAdminDashboard(uid) {
-        const content = document.getElementById("content");
-        content.innerHTML = `
-            <div class="welcome-banner">
-                <h2>Admin Dashboard</h2>
-                <p>Beheer het hele systeem vanuit dit dashboard</p>
-            </div>
+        // Inlogfunctie
+        loginBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
             
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card admin-card">
-                        <div class="card-header">
-                            <h5>Baan Beheer</h5>
-                        </div>
-                        <div class="card-body">
-                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addJobModal">Nieuwe Baan Toevoegen</button>
-                            <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#promoteModal">CEO Aanstellen</button>
-                            <button class="btn btn-danger mb-3" data-bs-toggle="modal" data-bs-target="#fireModal">CEO Ontslaan</button>
-                            <div id="jobsList"></div>
-                        </div>
-                    </div>
-
-                    <div class="card admin-card">
-                        <div class="card-header">
-                            <h5>Sollicitaties</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="applicationsList"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card admin-card">
-                        <div class="card-header">
-                            <h5>Systeem Acties</h5>
-                        </div>
-                        <div class="card-body">
-                            <button class="btn btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#addVacatureModal">Vacature Plaatsen</button>
-                            <button class="btn btn-info mb-3" data-bs-toggle="modal" data-bs-target="#addContractModal">Contract Aanmaken</button>
-                            <div id="vacaturesList"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // Event listeners toevoegen
-        document.getElementById("promoteBtn").addEventListener("click", promoteToCEO);
-        document.getElementById("fireBtn").addEventListener("click", fireCEO);
-        document.getElementById("addJobBtn").addEventListener("click", addJob);
-        document.getElementById("addVacatureBtn").addEventListener("click", addVacature);
-        document.getElementById("addContractBtn").addEventListener("click", addContract);
-        document.getElementById("applyBtn").addEventListener("click", submitApplication);
-
-        // Data laden
-        loadJobs();
-        loadVacatures();
-        loadEmployees();
-        loadApplications();
-    }
-
-    async function loadCEODashboard(uid, jobTitle) {
-        const content = document.getElementById("content");
-        content.innerHTML = `
-            <div class="welcome-banner">
-                <h2>CEO Dashboard - ${jobTitle}</h2>
-                <p>Beheer je afdeling vanuit dit dashboard</p>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card ceo-card">
-                        <div class="card-header">
-                            <h5>Mijn Werknemers</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="myEmployeesList"></div>
-                        </div>
-                    </div>
-
-                    <div class="card ceo-card">
-                        <div class="card-header">
-                            <h5>Sollicitaties</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="applicationsList"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card ceo-card">
-                        <div class="card-header">
-                            <h5>Acties</h5>
-                        </div>
-                        <div class="card-body">
-                            <button class="btn btn-warning mb-3" data-bs-toggle="modal" data-bs-target="#addVacatureModal">Vacature Plaatsen</button>
-                            <button class="btn btn-info mb-3" data-bs-toggle="modal" data-bs-target="#addContractModal">Contract Aanmaken</button>
-                            <div id="vacaturesList"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // Event listeners toevoegen
-        document.getElementById("addVacatureBtn").addEventListener("click", addVacature);
-        document.getElementById("addContractBtn").addEventListener("click", addContract);
-        document.getElementById("applyBtn").addEventListener("click", submitApplication);
-
-        // Data laden
-        loadMyEmployees(uid, jobTitle);
-        loadVacatures();
-        loadEmployees();
-        loadApplicationsForJob(jobTitle);
-    }
-
-    async function loadEmployeeDashboard(uid) {
-        const content = document.getElementById("content");
-        content.innerHTML = `
-            <div class="welcome-banner">
-                <h2>Mijn Dashboard</h2>
-                <p>Bekijk je contracten en vacatures</p>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="card employee-card">
-                        <div class="card-header">
-                            <h5>Mijn Contracten</h5>
-                        </div>
-                        <div class="card-body" id="myContractsList"></div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card vacature-card">
-                        <div class="card-header">
-                            <h5>Openstaande Vacatures</h5>
-                        </div>
-                        <div class="card-body" id="openVacaturesList"></div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // Data laden
-        loadMyContracts(uid);
-        loadOpenVacatures();
-    }
-
-    // Data laad functies
-    async function loadJobs() {
-        const jobsList = document.getElementById("jobsList");
-        if (!jobsList) return;
-        
-        jobsList.innerHTML = "<h6>Banen Lijst:</h6><ul class='list-group' id='jobsListItems'></ul>";
-        
-        const jobsListItems = document.getElementById("jobsListItems");
-        jobsListItems.innerHTML = "";
-        
-        const jobsSnap = await getDocs(collection(db, "jobs"));
-        jobsSnap.forEach(doc => {
-            const job = doc.data();
-            const li = document.createElement("li");
-            li.className = "list-group-item d-flex justify-content-between align-items-center";
-            li.innerHTML = `
-                <div>
-                    <strong>${job.title}</strong>
-                    <p class="mb-0 small">${job.description || 'Geen omschrijving'}</p>
-                </div>
-                <span class="badge bg-primary">${job.ceo || 'Geen CEO'}</span>
-            `;
-            jobsListItems.appendChild(li);
-        });
-
-        // Vul dropdowns in modals
-        const jobSelect = document.getElementById("jobSelect");
-        const fireJobSelect = document.getElementById("fireJobSelect");
-        const vacatureJobSelect = document.getElementById("vacatureJobSelect");
-        const contractJobSelect = document.getElementById("contractJob");
-        
-        if (jobSelect) jobSelect.innerHTML = "";
-        if (fireJobSelect) fireJobSelect.innerHTML = "";
-        if (vacatureJobSelect) vacatureJobSelect.innerHTML = "";
-        if (contractJobSelect) contractJobSelect.innerHTML = "";
-        
-        jobsSnap.forEach(doc => {
-            const job = doc.data();
-            const option = document.createElement("option");
-            option.value = doc.id;
-            option.textContent = job.title;
-            
-            if (jobSelect) jobSelect.appendChild(option.cloneNode(true));
-            if (fireJobSelect) fireJobSelect.appendChild(option.cloneNode(true));
-            if (vacatureJobSelect) vacatureJobSelect.appendChild(option.cloneNode(true));
-            if (contractJobSelect) contractJobSelect.appendChild(option.cloneNode(true));
-        });
-    }
-
-    async function loadVacatures() {
-        const vacaturesList = document.getElementById("vacaturesList");
-        if (!vacaturesList) return;
-        
-        vacaturesList.innerHTML = "<h6>Recente Vacatures:</h6><ul class='list-group' id='vacaturesListItems'></ul>";
-        
-        const vacaturesListItems = document.getElementById("vacaturesListItems");
-        vacaturesListItems.innerHTML = "";
-        
-        const vacaturesSnap = await getDocs(collection(db, "vacatures"));
-        vacaturesSnap.forEach(doc => {
-            const vacature = doc.data();
-            const li = document.createElement("li");
-            li.className = "list-group-item";
-            li.innerHTML = `
-                <h6>${vacature.title}</h6>
-                <p>${vacature.description || 'Geen omschrijving'}</p>
-                <p class="small text-muted">Eisen: ${vacature.requirements || 'Geen specifieke eisen'}</p>
-                <p class="small text-muted">Baan: ${vacature.jobTitle || 'Algemeen'}</p>
-            `;
-            vacaturesListItems.appendChild(li);
-        });
-    }
-
-    async function loadOpenVacatures() {
-        const openVacaturesList = document.getElementById("openVacaturesList");
-        if (!openVacaturesList) return;
-        
-        openVacaturesList.innerHTML = "<ul class='list-group' id='openVacaturesListItems'></ul>";
-        
-        const openVacaturesListItems = document.getElementById("openVacaturesListItems");
-        openVacaturesListItems.innerHTML = "";
-        
-        const vacaturesSnap = await getDocs(collection(db, "vacatures"));
-        vacaturesSnap.forEach(doc => {
-            const vacature = doc.data();
-            const li = document.createElement("li");
-            li.className = "list-group-item";
-            li.innerHTML = `
-                <h6>${vacature.title}</h6>
-                <p>${vacature.description || 'Geen omschrijving'}</p>
-                <p class="small text-muted">Eisen: ${vacature.requirements || 'Geen specifieke eisen'}</p>
-                <button class="btn btn-sm btn-outline-primary apply-btn" data-vacatureid="${doc.id}">Solliciteren</button>
-            `;
-            openVacaturesListItems.appendChild(li);
-        });
-
-        // Voeg event listeners toe aan sollicitatieknoppen
-        document.querySelectorAll('.apply-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                currentVacatureId = this.getAttribute('data-vacatureid');
-                showApplyModal(currentVacatureId);
-            });
-        });
-    }
-
-    async function showApplyModal(vacatureId) {
-        const vacatureDoc = await getDoc(doc(db, "vacatures", vacatureId));
-        if (!vacatureDoc.exists()) {
-            alert("Vacature niet gevonden");
-            return;
-        }
-
-        const vacature = vacatureDoc.data();
-        const applyVacatureInfo = document.getElementById("applyVacatureInfo");
-        applyVacatureInfo.innerHTML = `
-            <h6>${vacature.title}</h6>
-            <p>${vacature.description || 'Geen omschrijving'}</p>
-            <p class="small text-muted">Eisen: ${vacature.requirements || 'Geen specifieke eisen'}</p>
-            <hr>
-        `;
-
-        applyModal.show();
-    }
-
-    async function submitApplication() {
-        const motivation = document.getElementById("applyMotivation").value;
-        if (!motivation) {
-            alert("Voeg een motivatie toe");
-            return;
-        }
-
-        try {
-            const user = auth.currentUser;
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            const userData = userDoc.data();
-
-            const vacatureDoc = await getDoc(doc(db, "vacatures", currentVacatureId));
-            const vacatureData = vacatureDoc.data();
-
-            await addDoc(collection(db, "applications"), {
-                vacatureId: currentVacatureId,
-                vacatureTitle: vacatureData.title,
-                jobTitle: vacatureData.jobTitle,
-                applicantId: user.uid,
-                applicantEmail: userData.email,
-                motivation,
-                status: "pending",
-                appliedAt: new Date().toISOString()
-            });
-
-            alert("Sollicitatie succesvol verzonden!");
-            applyModal.hide();
-            document.getElementById("applyMotivation").value = "";
-        } catch (err) {
-            alert("Fout bij verzenden sollicitatie: " + err.message);
-        }
-    }
-
-    async function loadApplications() {
-        const applicationsList = document.getElementById("applicationsList");
-        if (!applicationsList) return;
-        
-        applicationsList.innerHTML = "<ul class='list-group' id='applicationsListItems'></ul>";
-        
-        const applicationsListItems = document.getElementById("applicationsListItems");
-        applicationsListItems.innerHTML = "";
-        
-        const applicationsSnap = await getDocs(collection(db, "applications"));
-        applicationsSnap.forEach(doc => {
-            const application = doc.data();
-            const li = document.createElement("li");
-            li.className = "list-group-item application-item";
-            li.innerHTML = `
-                <div class="d-flex justify-content-between">
-                    <h6>${application.vacatureTitle}</h6>
-                    <span class="badge ${getStatusBadgeClass(application.status)}">
-                        ${application.status}
-                    </span>
-                </div>
-                <p><strong>Sollicitant:</strong> ${application.applicantEmail}</p>
-                <p><strong>Motivatie:</strong> ${application.motivation}</p>
-                <p class="small text-muted">${formatDate(application.appliedAt)}</p>
-                <div class="mt-2">
-                    <button class="btn btn-sm btn-success me-2 accept-btn" data-appid="${doc.id}">Accepteren</button>
-                    <button class="btn btn-sm btn-danger reject-btn" data-appid="${doc.id}">Afwijzen</button>
-                </div>
-            `;
-            applicationsListItems.appendChild(li);
-        });
-
-        // Voeg event listeners toe aan actieknoppen
-        document.querySelectorAll('.accept-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                updateApplicationStatus(this.getAttribute('data-appid'), 'accepted');
-            });
-        });
-
-        document.querySelectorAll('.reject-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                updateApplicationStatus(this.getAttribute('data-appid'), 'rejected');
-            });
-        });
-    }
-
-    async function loadApplicationsForJob(jobTitle) {
-        const applicationsList = document.getElementById("applicationsList");
-        if (!applicationsList) return;
-        
-        applicationsList.innerHTML = "<ul class='list-group' id='applicationsListItems'></ul>";
-        
-        const applicationsListItems = document.getElementById("applicationsListItems");
-        applicationsListItems.innerHTML = "";
-        
-        const applicationsSnap = await getDocs(query(collection(db, "applications"), where("jobTitle", "==", jobTitle)));
-        applicationsSnap.forEach(doc => {
-            const application = doc.data();
-            const li = document.createElement("li");
-            li.className = "list-group-item application-item";
-            li.innerHTML = `
-                <div class="d-flex justify-content-between">
-                    <h6>${application.vacatureTitle}</h6>
-                    <span class="badge ${getStatusBadgeClass(application.status)}">
-                        ${application.status}
-                    </span>
-                </div>
-                <p><strong>Sollicitant:</strong> ${application.applicantEmail}</p>
-                <p><strong>Motivatie:</strong> ${application.motivation}</p>
-                <p class="small text-muted">${formatDate(application.appliedAt)}</p>
-                <div class="mt-2">
-                    <button class="btn btn-sm btn-success me-2 accept-btn" data-appid="${doc.id}">Accepteren</button>
-                    <button class="btn btn-sm btn-danger reject-btn" data-appid="${doc.id}">Afwijzen</button>
-                </div>
-            `;
-            applicationsListItems.appendChild(li);
-        });
-
-        // Voeg event listeners toe aan actieknoppen
-        document.querySelectorAll('.accept-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                updateApplicationStatus(this.getAttribute('data-appid'), 'accepted');
-            });
-        });
-
-        document.querySelectorAll('.reject-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                updateApplicationStatus(this.getAttribute('data-appid'), 'rejected');
-            });
-        });
-    }
-
-    async function updateApplicationStatus(appId, status) {
-        try {
-            await updateDoc(doc(db, "applications", appId), {
-                status
-            });
-            
-            if (status === 'accepted') {
-                alert("Sollicitatie geaccepteerd!");
-            } else {
-                alert("Sollicitatie afgewezen");
-            }
-            
-            // Herlaad de applicaties
-            const user = auth.currentUser;
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            const userData = userDoc.data();
-            
-            if (userData.role === 'admin') {
-                loadApplications();
-            } else if (userData.role === 'ceo') {
-                loadApplicationsForJob(userData.job);
-            }
-        } catch (err) {
-            alert("Fout bij updaten sollicitatie: " + err.message);
-        }
-    }
-
-    async function loadEmployees() {
-        const contractEmployeeSelect = document.getElementById("contractEmployee");
-        if (!contractEmployeeSelect) return;
-        
-        contractEmployeeSelect.innerHTML = "";
-        
-        const employeesSnap = await getDocs(collection(db, "users"));
-        employeesSnap.forEach(doc => {
-            const user = doc.data();
-            if (user.role === "werknemer") {
-                const option = document.createElement("option");
-                option.value = doc.id;
-                option.textContent = user.email;
-                contractEmployeeSelect.appendChild(option);
-            }
-        });
-    }
-
-    async function loadMyEmployees(ceoUid, jobTitle) {
-        const myEmployeesList = document.getElementById("myEmployeesList");
-        if (!myEmployeesList) return;
-        
-        myEmployeesList.innerHTML = "<h6>Mijn Werknemers:</h6><ul class='list-group' id='myEmployeesListItems'></ul>";
-        
-        const myEmployeesListItems = document.getElementById("myEmployeesListItems");
-        myEmployeesListItems.innerHTML = "";
-        
-        // Zoek contracten voor deze job
-        const contractsSnap = await getDocs(query(collection(db, "contracts"), where("jobTitle", "==", jobTitle)));
-        
-        for (const contractDoc of contractsSnap.docs) {
-            const contract = contractDoc.data();
-            const userSnap = await getDoc(doc(db, "users", contract.employeeId));
-            if (userSnap.exists()) {
-                const user = userSnap.data();
-                const li = document.createElement("li");
-                li.className = "list-group-item d-flex justify-content-between align-items-center";
-                li.innerHTML = `
-                    <div>
-                        <strong>${user.email}</strong>
-                        <p class="mb-0 small">Contract: ${contract.jobTitle} (${contract.salary})</p>
-                    </div>
-                    <span class="badge ${isContractActive(contract) ? 'bg-success' : 'bg-secondary'}">
-                        ${isContractActive(contract) ? 'Actief' : 'Verlopen'}
-                    </span>
-                `;
-                myEmployeesListItems.appendChild(li);
-            }
-        }
-    }
-
-    async function loadMyContracts(employeeUid) {
-        const myContractsList = document.getElementById("myContractsList");
-        if (!myContractsList) return;
-        
-        myContractsList.innerHTML = "<ul class='list-group' id='myContractsListItems'></ul>";
-        
-        const myContractsListItems = document.getElementById("myContractsListItems");
-        myContractsListItems.innerHTML = "";
-        
-        // Zoek contracten voor deze werknemer
-        const contractsSnap = await getDocs(query(collection(db, "contracts"), where("employeeId", "==", employeeUid)));
-        
-        for (const contractDoc of contractsSnap.docs) {
-            const contract = contractDoc.data();
-            const li = document.createElement("li");
-            li.className = `list-group-item contract-card ${isContractActive(contract) ? 'active-contract' : 'expired-contract'}`;
-            li.innerHTML = `
-                <div class="d-flex justify-content-between">
-                    <h6>${contract.jobTitle}</h6>
-                    <span class="badge ${isContractActive(contract) ? 'bg-success' : 'bg-secondary'}">
-                        ${isContractActive(contract) ? 'Actief' : 'Verlopen'}
-                    </span>
-                </div>
-                <p><strong>Salaris:</strong> ${contract.salary}</p>
-                <p><strong>Periode:</strong> ${formatDate(contract.startDate)} - ${formatDate(contract.endDate)}</p>
-                <p><strong>Voorwaarden:</strong> ${contract.terms || 'Geen specifieke voorwaarden'}</p>
-            `;
-            myContractsListItems.appendChild(li);
-        }
-    }
-
-    // Actie functies
-    async function promoteToCEO() {
-        const jobId = document.getElementById("jobSelect").value;
-        const email = document.getElementById("promoteEmail").value;
-        
-        if (!jobId || !email) {
-            alert("Selecteer zowel een baan als een e-mailadres");
-            return;
-        }
-        
-        try {
-            // Zoek de gebruiker met dit e-mailadres
-            const usersSnap = await getDocs(query(collection(db, "users"), where("email", "==", email)));
-            
-            if (usersSnap.empty) {
-                alert("Gebruiker niet gevonden");
+            if (!email || !password) {
+                showMessage('Vul alle velden in', 'error');
                 return;
             }
             
-            const userDoc = usersSnap.docs[0];
-            const userData = userDoc.data();
-            
-            if (userData.role !== "werknemer") {
-                alert("Alleen werknemers kunnen tot CEO worden benoemd");
-                return;
+            try {
+                showMessage('Inloggen...', 'success');
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                // Doorsturen naar dashboard
+                window.location.href = "dashboard.html";
+            } catch (error) {
+                let errorMessage;
+                switch (error.code) {
+                    case 'auth/invalid-email':
+                        errorMessage = 'Ongeldig e-mailadres';
+                        break;
+                    case 'auth/user-not-found':
+                        errorMessage = 'Gebruiker niet gevonden';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Onjuist wachtwoord';
+                        break;
+                    default:
+                        errorMessage = 'Inloggen mislukt, probeer later opnieuw';
+                }
+                showMessage(errorMessage, 'error');
             }
-            
-            // Update gebruiker naar CEO
-            await updateDoc(doc(db, "users", userDoc.id), {
-                role: "ceo",
-                job: jobId
-            });
-            
-            // Update de baan met CEO informatie
-            const jobDoc = await getDoc(doc(db, "jobs", jobId));
-            const jobData = jobDoc.data();
-            
-            await updateDoc(doc(db, "jobs", jobId), {
-                ceo: userData.email,
-                ceoId: userDoc.id
-            });
-            
-            alert(`${userData.email} is nu CEO van ${jobData.title}`);
-            promoteModal.hide();
-            document.getElementById("promoteEmail").value = "";
-            loadJobs();
-        } catch (err) {
-            alert("Fout bij aanstellen CEO: " + err.message);
-        }
-    }
+        });
 
-    async function fireCEO() {
-        const jobId = document.getElementById("fireJobSelect").value;
-        
-        if (!jobId) {
-            alert("Selecteer een baan");
-            return;
-        }
-        
-        try {
-            // Haal baan informatie op
-            const jobDoc = await getDoc(doc(db, "jobs", jobId));
-            if (!jobDoc.exists()) {
-                alert("Baan niet gevonden");
+        // Registratiefunctie
+        registerBtn.addEventListener('click', async () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            
+            if (!email || !password) {
+                showMessage('Vul alle velden in', 'error');
                 return;
             }
             
-            const jobData = jobDoc.data();
-            
-            if (!jobData.ceoId) {
-                alert("Deze baan heeft geen CEO");
+            if (password.length < 6) {
+                showMessage('Wachtwoord moet minstens 6 tekens bevatten', 'error');
                 return;
             }
             
-            // Update gebruiker terug naar werknemer
-            await updateDoc(doc(db, "users", jobData.ceoId), {
-                role: "werknemer",
-                job: null
-            });
-            
-            // Verwijder CEO van baan
-            await updateDoc(doc(db, "jobs", jobId), {
-                ceo: null,
-                ceoId: null
-            });
-            
-            alert(`CEO van ${jobData.title} is ontslagen`);
-            fireModal.hide();
-            loadJobs();
-        } catch (err) {
-            alert("Fout bij ontslaan CEO: " + err.message);
-        }
-    }
-
-    async function addJob() {
-        const title = document.getElementById("jobTitle").value;
-        const description = document.getElementById("jobDescription").value;
-        
-        if (!title) {
-            alert("Voer een baan titel in");
-            return;
-        }
-        
-        try {
-            await addDoc(collection(db, "jobs"), {
-                title,
-                description,
-                createdAt: new Date().toISOString()
-            });
-            
-            alert("Baan succesvol toegevoegd!");
-            addJobModal.hide();
-            document.getElementById("jobTitle").value = "";
-            document.getElementById("jobDescription").value = "";
-            loadJobs();
-        } catch (err) {
-            alert("Fout bij toevoegen baan: " + err.message);
-        }
-    }
-
-    async function addVacature() {
-        const title = document.getElementById("vacatureTitle").value;
-        const description = document.getElementById("vacatureDescription").value;
-        const requirements = document.getElementById("vacatureRequirements").value;
-        const jobId = document.getElementById("vacatureJobSelect").value;
-        
-        if (!title || !jobId) {
-            alert("Voer een titel en selecteer een baan in");
-            return;
-        }
-        
-        try {
-            // Haal baan informatie op
-            const jobDoc = await getDoc(doc(db, "jobs", jobId));
-            if (!jobDoc.exists()) {
-                alert("Baan niet gevonden");
-                return;
+            try {
+                showMessage('Account aanmaken...', 'success');
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Standaardrol: werknemer (behalve voor admin@voorbeeld.nl)
+                const role = email === "admin@voorbeeld.nl" ? "admin" : "werknemer";
+                
+                // Gebruikersgegevens opslaan in Firestore
+                await setDoc(doc(db, "users", user.uid), {
+                    email: user.email,
+                    role: role,
+                    name: user.email.split('@')[0],
+                    createdAt: new Date().toISOString()
+                });
+                
+                showMessage('Account succesvol aangemaakt! U wordt ingelogd...', 'success');
+                
+                // Doorsturen naar dashboard na korte vertraging
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 1500);
+            } catch (error) {
+                let errorMessage;
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage = 'E-mailadres is al in gebruik';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage = 'Wachtwoord is te zwak';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Ongeldig e-mailadres';
+                        break;
+                    default:
+                        errorMessage = 'Registratie mislukt, probeer later opnieuw';
+                }
+                showMessage(errorMessage, 'error');
             }
-            
-            const jobData = jobDoc.data();
-            
-            await addDoc(collection(db, "vacatures"), {
-                title,
-                description,
-                requirements,
-                jobId,
-                jobTitle: jobData.title,
-                createdAt: new Date().toISOString()
-            });
-            
-            alert("Vacature succesvol geplaatst!");
-            addVacatureModal.hide();
-            document.getElementById("vacatureTitle").value = "";
-            document.getElementById("vacatureDescription").value = "";
-            document.getElementById("vacatureRequirements").value = "";
-            loadVacatures();
-            loadOpenVacatures();
-        } catch (err) {
-            alert("Fout bij plaatsen vacature: " + err.message);
-        }
-    }
-
-    async function addContract() {
-        const employeeId = document.getElementById("contractEmployee").value;
-        const jobId = document.getElementById("contractJob").value;
-        const salary = document.getElementById("contractSalary").value;
-        const startDate = document.getElementById("contractStartDate").value;
-        const endDate = document.getElementById("contractEndDate").value;
-        const terms = document.getElementById("contractTerms").value;
-        
-        if (!employeeId || !jobId || !salary || !startDate || !endDate) {
-            alert("Vul alle verplichte velden in");
-            return;
-        }
-        
-        try {
-            // Haal baan informatie op
-            const jobDoc = await getDoc(doc(db, "jobs", jobId));
-            if (!jobDoc.exists()) {
-                alert("Baan niet gevonden");
-                return;
-            }
-            
-            const jobData = jobDoc.data();
-            
-            // Haal werknemer informatie op
-            const employeeDoc = await getDoc(doc(db, "users", employeeId));
-            if (!employeeDoc.exists()) {
-                alert("Werknemer niet gevonden");
-                return;
-            }
-            
-            const employeeData = employeeDoc.data();
-            
-            await addDoc(collection(db, "contracts"), {
-                employeeId,
-                employeeEmail: employeeData.email,
-                jobId,
-                jobTitle: jobData.title,
-                salary,
-                startDate,
-                endDate,
-                terms,
-                createdAt: new Date().toISOString()
-            });
-            
-            alert("Contract succesvol aangemaakt!");
-            addContractModal.hide();
-            document.getElementById("contractSalary").value = "";
-            document.getElementById("contractStartDate").value = "";
-            document.getElementById("contractEndDate").value = "";
-            document.getElementById("contractTerms").value = "";
-            
-            // Herlaad de relevante data
-            const user = auth.currentUser;
-            const userDoc = await getDoc(doc(db, "users", user.uid));
-            const userData = userDoc.data();
-            
-            if (userData.role === 'ceo') {
-                loadMyEmployees(user.uid, userData.job);
-            } else if (userData.role === 'admin') {
-                loadEmployees();
-            }
-        } catch (err) {
-            alert("Fout bij aanmaken contract: " + err.message);
-        }
-    }
-
-    // Event listeners voor globale functies
-    if (document.getElementById("loginBtn")) {
-        document.getElementById("loginBtn").addEventListener("click", login);
-    }
-    
-    if (document.getElementById("registerBtn")) {
-        document.getElementById("registerBtn").addEventListener("click", register);
-    }
-    
-    if (document.getElementById("logoutLink")) {
-        document.getElementById("logoutLink").addEventListener("click", logout);
-    }
-</script>
+        });
+    </script>
 </body>
 </html>
