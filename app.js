@@ -39,7 +39,7 @@ async function register() {
 
 async function logout() {
   await signOut(auth);
-  window.location.href = "index.html";
+  window.location.href = "contracten.html";
 }
 
 auth.onAuthStateChanged(async user => {
