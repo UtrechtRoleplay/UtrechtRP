@@ -119,9 +119,11 @@ async function loadVacatures() {
 
 // Zorg dat login/register werken als op de knoppen wordt geklikt
 document.addEventListener("DOMContentLoaded", () => {
-  const loginBtn = document.getElementById("loginBtn");
-  const registerBtn = document.getElementById("registerBtn");
-  if (loginBtn) loginBtn.addEventListener("click", login);
-  if (registerBtn) registerBtn.addEventListener("click", register);
-});
+const loginBtn = document.getElementById("loginBtn");
+const registerBtn = document.getElementById("registerBtn");
+const logoutBtn = document.getElementById("logoutBtn");
 
+if (loginBtn) loginBtn.addEventListener("click", login);
+if (registerBtn) registerBtn.addEventListener("click", register);
+if (logoutBtn) logoutBtn.addEventListener("click", logout);
+});
