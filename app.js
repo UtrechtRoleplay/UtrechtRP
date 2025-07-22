@@ -116,5 +116,12 @@ async function loadVacatures() {
   });
 }
 
-if (document.getElementById("login")) window.login = login;
-if (document.getElementById("register")) window.register = register;
+
+// Zorg dat login/register werken als op de knoppen wordt geklikt
+document.addEventListener("DOMContentLoaded", () => {
+  const loginBtn = document.getElementById("loginBtn");
+  const registerBtn = document.getElementById("registerBtn");
+  if (loginBtn) loginBtn.addEventListener("click", login);
+  if (registerBtn) registerBtn.addEventListener("click", register);
+});
+
