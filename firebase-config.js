@@ -1,9 +1,10 @@
 // Voeg hier je Firebase-config toe
 export const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+   apiKey: "AIzaSyBl1JNsn64WjiPorFpCN48aboNdSzS1Py4",
+    authDomain: "utrechtcontracten.firebaseapp.com",
+    projectId: "utrechtcontracten",
+    storageBucket: "utrechtcontracten.firebasestorage.app",
+    messagingSenderId: "1088300511903",
+    appId: "1:1088300511903:web:f10ba519b201acc237a8aa",
+    measurementId: "G-ZRF8GZDNLV
 };
