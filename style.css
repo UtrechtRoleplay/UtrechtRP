@@ -1,0 +1,3 @@
+body { font-family: sans-serif; padding: 20px; max-width: 500px; margin: auto; }
+input, button { width: 100%; padding: 10px; margin: 5px 0; }
+button { cursor: pointer; }
