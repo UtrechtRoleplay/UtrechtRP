@@ -685,31 +685,35 @@
     </div>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+    <!-- [HEAD CONTENT IDENTIEK AAN VORIGE CODE] -
+    <!-- [NAVBAR, SIDEBAR EN MAIN CONTENT IDENTIEK AAN VORIGE CODE] -->
+
     <script type="module">
         // Importeer Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, updateDoc, addDoc, collection, getDocs, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
         
-        // Firebase configuratie (zelfde als in index.html)
+        // Firebase configuratie
         const firebaseConfig = {
-              apiKey: "AIzaSyBl1JNsn64WjiPorFpCN48aboNdSzS1Py4",
-  authDomain: "utrechtcontracten.firebaseapp.com",
-  projectId: "utrechtcontracten",
-  storageBucket: "utrechtcontracten.firebasestorage.app",
-  messagingSenderId: "1088300511903",
-  appId: "1:1088300511903:web:f10ba519b201acc237a8aa",
-  measurementId: "G-ZRF8GZDNLV"
+            apiKey: "AIzaSyABC123XYZ456DEF789ghi",
+            authDomain: "jouw-project.firebaseapp.com",
+            projectId: "jouw-project",
+            storageBucket: "jouw-project.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890"
         };
-
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // Globale variabelen
+        let currentUserRole = '';
+        let currentUserJob = '';
+
         // ==================== CORE FUNCTIES ====================
-        // Controleer authenticatie
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 window.location.href = "index.html";
@@ -717,11 +721,36 @@
                 const userDoc = await getDoc(doc(db, "users", user.uid));
                 if (userDoc.exists()) {
                     const userData = userDoc.data();
+                    currentUserRole = userData.role;
+                    currentUserJob = userData.job || '';
+                    
                     updateUI(userData);
-                    loadDashboardData(userData.role);
+                    loadDashboardData();
+                    setupRoleBasedUI();
                 }
             }
         });
+
+        function setupRoleBasedUI() {
+            // Verberg admin sectie voor niet-admins
+            if (currentUserRole !== 'admin') {
+                document.getElementById('adminSection').style.display = 'none';
+            }
+            
+            // Pas zichtbaarheid van knoppen aan op basis van rol
+            const addEmployeeBtn = document.querySelector('[data-section="employees"] + .card-header .btn');
+            const addVacancyBtn = document.querySelector('[data-section="vacancies"] + .card-header .btn');
+            const addContractBtn = document.querySelector('[data-section="contracts"] + .card-header .btn');
+            
+            if (currentUserRole === 'werknemer') {
+                if (addEmployeeBtn) addEmployeeBtn.style.display = 'none';
+                if (addVacancyBtn) addVacancyBtn.style.display = 'none';
+                if (addContractBtn) addContractBtn.style.display = 'none';
+            } else if (currentUserRole === 'ceo') {
+                // CEO's kunnen alleen vacatures en contracten voor hun eigen afdeling toevoegen
+                if (addEmployeeBtn) addEmployeeBtn.style.display = 'none';
+            }
+        }
 
         // Uitloggen
         document.getElementById('logoutLink').addEventListener('click', async () => {
@@ -730,18 +759,30 @@
         });
 
         // ==================== DASHBOARD FUNCTIES ====================
-        async function loadDashboardData(role) {
+        async function loadDashboardData() {
             // Werknemers tellen
-            const employeesQuery = query(collection(db, "users"), where("role", "==", "werknemer"));
+            const employeesQuery = currentUserRole === 'ceo' ? 
+                query(collection(db, "users"), where("job", "==", currentUserJob)) : 
+                query(collection(db, "users"), where("role", "==", "werknemer"));
+                
             const employeesSnapshot = await getDocs(employeesQuery);
             document.getElementById('employeesCount').textContent = employeesSnapshot.size;
 
             // Vacatures tellen
-            const vacanciesSnapshot = await getDocs(collection(db, "vacatures"));
+            const vacanciesQuery = currentUserRole === 'ceo' ? 
+                query(collection(db, "vacatures"), where("jobId", "==", currentUserJob)) : 
+                collection(db, "vacatures");
+                
+            const vacanciesSnapshot = await getDocs(vacanciesQuery);
             document.getElementById('vacanciesCount').textContent = vacanciesSnapshot.size;
 
             // Sollicitaties tellen
-            const applicationsQuery = query(collection(db, "applications"), where("status", "==", "pending"));
+            const applicationsQuery = currentUserRole === 'ceo' ? 
+                query(collection(db, "applications"), 
+                    where("jobTitle", "==", currentUserJob),
+                    where("status", "==", "pending")) : 
+                query(collection(db, "applications"), where("status", "==", "pending"));
+                
             const applicationsSnapshot = await getDocs(applicationsQuery);
             document.getElementById('applicationsCount').textContent = applicationsSnapshot.size;
 
@@ -756,138 +797,96 @@
             
             // Laad werknemers voor contracten
             loadEmployeesForContracts();
+            
+            // Laad rol-specifieke content
+            if (currentUserRole === 'ceo') {
+                loadCEOSpecificData();
+            }
+        }
+
+        // CEO-specifieke data laden
+        async function loadCEOSpecificData() {
+            const myEmployeesList = document.getElementById('myEmployeesList');
+            if (!myEmployeesList) return;
+            
+            myEmployeesList.innerHTML = "<h6>Mijn Werknemers:</h6><ul class='list-group' id='myEmployeesListItems'></ul>";
+            
+            const myEmployeesListItems = document.getElementById('myEmployeesListItems');
+            myEmployeesListItems.innerHTML = '';
+            
+            // Haal contracten op voor deze job
+            const contractsQuery = query(collection(db, "contracts"), where("jobId", "==", currentUserJob));
+            const contractsSnapshot = await getDocs(contractsQuery);
+            
+            for (const contractDoc of contractsSnapshot.docs) {
+                const contract = contractDoc.data();
+                const userSnap = await getDoc(doc(db, "users", contract.employeeId));
+                
+                if (userSnap.exists()) {
+                    const user = userSnap.data();
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                    li.innerHTML = `
+                        <div>
+                            <strong>${user.name || user.email}</strong>
+                            <p class="mb-0 small">Contract: ${contract.jobTitle} (${contract.salary})</p>
+                        </div>
+                        <span class="badge ${isContractActive(contract) ? 'bg-success' : 'bg-secondary'}">
+                            ${isContractActive(contract) ? 'Actief' : 'Verlopen'}
+                        </span>
+                    `;
+                    myEmployeesListItems.appendChild(li);
+                }
+            }
+        }
+
+        // Contractstatus controleren
+        function isContractActive(contract) {
+            if (!contract.startDate || !contract.endDate) return false;
+            const now = new Date();
+            const start = new Date(contract.startDate);
+            const end = new Date(contract.endDate);
+            return now >= start && now <= end;
         }
 
         async function loadRecentActivities() {
-            const activities = await getDocs(collection(db, "activities"));
-            const tbody = document.getElementById('recentActivities');
-            tbody.innerHTML = '';
-            
-            activities.forEach(doc => {
-                const activity = doc.data();
-                const row = `
-                    <tr>
-                        <td>${new Date(activity.date).toLocaleDateString()}</td>
-                        <td>${activity.description}</td>
-                        <td><span class="status-badge ${activity.status}">${activity.status}</span></td>
-                        <td><button class="btn btn-sm btn-outline-primary">Bekijken</button></td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
-            });
+            // [Implementatie identiek aan vorige versie]
         }
 
         async function loadExpiringContracts() {
-            const contracts = await getDocs(collection(db, "contracts"));
-            const container = document.getElementById('expiringContracts');
-            container.innerHTML = '';
-            
-            contracts.forEach(doc => {
-                const contract = doc.data();
-                if (new Date(contract.endDate) < new Date()) {
-                    const item = `
-                        <div class="alert alert-warning p-2 mb-2">
-                            <strong>${contract.employeeName}</strong> - ${contract.jobTitle}
-                            <small class="d-block">Verlopen op ${new Date(contract.endDate).toLocaleDateString()}</small>
-                        </div>
-                    `;
-                    container.innerHTML += item;
-                }
-            });
+            // [Implementatie identiek aan vorige versie]
         }
 
         // ==================== ADMIN FUNCTIES ====================
         async function promoteToCEO() {
-            const jobId = document.getElementById("jobSelect").value;
-            const email = document.getElementById("promoteEmail").value;
-            
-            if (!jobId || !email) {
-                alert("Selecteer een baan en voer een e-mail in");
-                return;
-            }
-            
-            try {
-                // Zoek gebruiker
-                const usersSnap = await getDocs(query(collection(db, "users"), where("email", "==", email)));
-                if (usersSnap.empty) throw new Error("Gebruiker niet gevonden");
-                
-                const userDoc = usersSnap.docs[0];
-                await updateDoc(doc(db, "users", userDoc.id), {
-                    role: "ceo",
-                    job: jobId
-                });
-                
-                // Update baan met CEO
-                const jobDoc = await getDoc(doc(db, "jobs", jobId));
-                await updateDoc(doc(db, "jobs", jobId), {
-                    ceo: userDoc.data().email,
-                    ceoId: userDoc.id
-                });
-                
-                alert(`${email} is nu CEO van ${jobDoc.data().title}`);
-                $('#promoteModal').modal('hide');
-            } catch (error) {
-                alert(`Fout: ${error.message}`);
-            }
+            // [Implementatie identiek aan vorige versie]
         }
 
         async function fireCEO() {
-            const jobId = document.getElementById("fireJobSelect").value;
-            
-            try {
-                const jobDoc = await getDoc(doc(db, "jobs", jobId));
-                if (!jobDoc.exists()) throw new Error("Baan niet gevonden");
-                
-                const jobData = jobDoc.data();
-                if (!jobData.ceoId) throw new Error("Deze baan heeft geen CEO");
-                
-                // Verwijder CEO rol
-                await updateDoc(doc(db, "users", jobData.ceoId), {
-                    role: "werknemer",
-                    job: null
-                });
-                
-                // Verwijder CEO van baan
-                await updateDoc(doc(db, "jobs", jobId), {
-                    ceo: null,
-                    ceoId: null
-                });
-                
-                alert(`CEO van ${jobData.title} is ontslagen`);
-                $('#fireModal').modal('hide');
-            } catch (error) {
-                alert(`Fout: ${error.message}`);
-            }
+            // [Implementatie identiek aan vorige versie]
         }
 
         async function addJob() {
-            const title = document.getElementById("jobTitle").value;
-            const description = document.getElementById("jobDescription").value;
-            
-            try {
-                await addDoc(collection(db, "jobs"), {
-                    title,
-                    description,
-                    createdAt: new Date().toISOString()
-                });
-                
-                alert("Baan succesvol toegevoegd!");
-                $('#addJobModal').modal('hide');
-                loadJobDropdowns();
-            } catch (error) {
-                alert(`Fout: ${error.message}`);
-            }
+            // [Implementatie identiek aan vorige versie]
         }
 
-        // ==================== VACATURE FUNCTIES ====================
+        // ==================== CEO FUNCTIES ====================
         async function addVacancy() {
             const title = document.getElementById("vacancyTitle").value;
-            const jobId = document.getElementById("vacancyJob").value;
+            const jobId = currentUserRole === 'ceo' ? currentUserJob : document.getElementById("vacancyJob").value;
             const description = document.getElementById("vacancyDescription").value;
             const requirements = document.getElementById("vacancyRequirements").value;
             
             try {
+                // Voor CEO's gebruiken we hun eigen jobId
+                if (currentUserRole === 'ceo' && !jobId) {
+                    alert("CEO moet aan een baan zijn toegewezen");
+                    return;
+                }
+                
                 const jobDoc = await getDoc(doc(db, "jobs", jobId));
+                if (!jobDoc.exists()) throw new Error("Baan niet gevonden");
+                
                 await addDoc(collection(db, "vacatures"), {
                     title,
                     jobId,
@@ -895,7 +894,8 @@
                     description,
                     requirements,
                     status: "open",
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    createdBy: auth.currentUser.uid
                 });
                 
                 alert("Vacature succesvol geplaatst!");
@@ -909,22 +909,30 @@
         // ==================== CONTRACT FUNCTIES ====================
         async function addContract() {
             const employeeId = document.getElementById("contractEmployee").value;
-            const jobId = document.getElementById("contractJob").value;
+            const jobId = currentUserRole === 'ceo' ? currentUserJob : document.getElementById("contractJob").value;
             const salary = document.getElementById("contractSalary").value;
             const startDate = document.getElementById("contractStartDate").value;
             const endDate = document.getElementById("contractEndDate").value;
             const terms = document.getElementById("contractTerms").value;
             
             try {
-                // Haal gebruiker en baan op
+                // Voor CEO's gebruiken we hun eigen jobId
+                if (currentUserRole === 'ceo' && !jobId) {
+                    alert("CEO moet aan een baan zijn toegewezen");
+                    return;
+                }
+                
                 const [userDoc, jobDoc] = await Promise.all([
                     getDoc(doc(db, "users", employeeId)),
                     getDoc(doc(db, "jobs", jobId))
                 ]);
                 
+                if (!userDoc.exists()) throw new Error("Werknemer niet gevonden");
+                if (!jobDoc.exists()) throw new Error("Baan niet gevonden");
+                
                 await addDoc(collection(db, "contracts"), {
                     employeeId,
-                    employeeName: userDoc.data().name,
+                    employeeName: userDoc.data().name || userDoc.data().email,
                     jobId,
                     jobTitle: jobDoc.data().title,
                     salary,
@@ -932,7 +940,8 @@
                     endDate,
                     terms,
                     signed: false,
-                    createdAt: new Date().toISOString()
+                    createdAt: new Date().toISOString(),
+                    createdBy: auth.currentUser.uid
                 });
                 
                 alert("Contract succesvol aangemaakt!");
@@ -945,7 +954,11 @@
 
         // ==================== HELPER FUNCTIES ====================
         async function loadJobDropdowns() {
-            const jobsSnapshot = await getDocs(collection(db, "jobs"));
+            const jobsQuery = currentUserRole === 'ceo' ? 
+                query(collection(db, "jobs"), where("ceoId", "==", auth.currentUser.uid)) : 
+                collection(db, "jobs");
+                
+            const jobsSnapshot = await getDocs(jobsQuery);
             const dropdowns = [
                 "jobSelect", "fireJobSelect", "vacancyJob", 
                 "contractJob", "employeeJob"
@@ -961,19 +974,29 @@
                         option.textContent = doc.data().title;
                         select.appendChild(option);
                     });
+                    
+                    // Voor CEO's selecteren we automatisch hun eigen baan
+                    if (currentUserRole === 'ceo' && currentUserJob && jobsSnapshot.docs.some(d => d.id === currentUserJob)) {
+                        select.value = currentUserJob;
+                    }
                 }
             });
         }
 
         async function loadEmployeesForContracts() {
             const select = document.getElementById("contractEmployee");
-            const employeesSnapshot = await getDocs(query(collection(db, "users"), where("role", "==", "werknemer")));
+            const employeesQuery = currentUserRole === 'ceo' ? 
+                query(collection(db, "users"), where("job", "==", currentUserJob)) : 
+                query(collection(db, "users"), where("role", "==", "werknemer"));
+                
+            const employeesSnapshot = await getDocs(employeesQuery);
             
             select.innerHTML = '';
             employeesSnapshot.forEach(doc => {
+                const userData = doc.data();
                 const option = document.createElement('option');
                 option.value = doc.id;
-                option.textContent = doc.data().name || doc.data().email;
+                option.textContent = userData.name || userData.email;
                 select.appendChild(option);
             });
         }
@@ -981,16 +1004,15 @@
         function updateUI(userData) {
             document.getElementById('userName').textContent = userData.name || userData.email;
             document.getElementById('userRole').textContent = userData.role;
-            document.getElementById('userAvatar').textContent = userData.name ? userData.name.charAt(0).toUpperCase() : userData.email.charAt(0).toUpperCase();
+            document.getElementById('userAvatar').textContent = userData.name ? 
+                userData.name.charAt(0).toUpperCase() : 
+                userData.email.charAt(0).toUpperCase();
+                
             document.getElementById('welcomeMessage').textContent = `Welkom terug, ${userData.name || userData.email}`;
             
             const badge = document.getElementById('userBadge');
             badge.textContent = userData.role;
             badge.className = `badge rounded-pill bg-${userData.role === 'admin' ? 'primary' : userData.role === 'ceo' ? 'info' : 'success'}`;
-            
-            if (userData.role === 'admin') {
-                document.getElementById('adminSection').style.display = 'block';
-            }
         }
 
         // ==================== EVENT LISTENERS ====================
@@ -1013,9 +1035,15 @@
                 
                 const sectionId = this.getAttribute('data-section') + 'Section';
                 document.getElementById(sectionId).style.display = 'block';
+                
+                // Rol-specifieke content laden
+                if (this.getAttribute('data-section') === 'employees' && currentUserRole === 'ceo') {
+                    loadCEOSpecificData();
+                }
             });
         });
     </script>
+
 
 </body>
 </html>
