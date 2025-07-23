@@ -3,493 +3,706 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRM Dashboard</title>
+    <title>HRM Systeem | Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #6a11cb;
-            --secondary: #2575fc;
-            --success: #28a745;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --info: #17a2b8;
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --info: #4895ef;
+            --warning: #f72585;
             --light: #f8f9fa;
             --dark: #212529;
+            --admin: #7209b7;
+            --ceo: #3a0ca3;
+            --employee: #4361ee;
+            --sidebar-bg: #1e2a78;
+            --sidebar-hover: #2a3a9e;
         }
         
         body {
-            background-color: #f5f7fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f9ff;
+            color: #333;
+            overflow-x: hidden;
         }
         
-        .navbar {
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .sidebar {
-            min-height: calc(100vh - 56px);
-            background: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            top: 56px;
-        }
-        
-        .sidebar .nav-link {
-            color: var(--dark);
-            border-radius: 5px;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        
-        .sidebar .nav-link.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-        }
-        
-        .sidebar .nav-link:hover:not(.active) {
-            background-color: rgba(106, 17, 203, 0.1);
-        }
-        
-        .sidebar .nav-link i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-        
-        .main-content {
-            padding: 20px;
-            background-color: #f5f7fa;
-        }
-        
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 20px;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-header {
-            background-color: white;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        .role-badge {
+            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
             font-weight: 600;
-            border-radius: 10px 10px 0 0 !important;
         }
         
         .badge-admin {
-            background-color: var(--primary);
+            background: var(--admin);
         }
         
         .badge-ceo {
-            background-color: var(--secondary);
+            background: var(--ceo);
         }
         
         .badge-employee {
-            background-color: var(--success);
+            background: var(--employee);
         }
         
-        .welcome-banner {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg), #0f1a5e);
             color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            height: 100vh;
+            position: fixed;
+            width: 250px;
+            padding-top: 20px;
+            transition: all 0.3s;
+            z-index: 1000;
         }
         
-        .table-responsive {
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        
-        .table {
-            background-color: white;
-        }
-        
-        .table th {
-            background-color: #f8f9fa;
-            font-weight: 600;
-        }
-        
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.85);
+            padding: 0.75rem 1.5rem;
+            margin: 0.25rem 1rem;
+            border-radius: 8px;
+            transition: all 0.2s;
             font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: var(--sidebar-hover);
+            color: white;
+        }
+        
+        .sidebar .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+            transition: all 0.3s;
+        }
+        
+        .kpi-card {
+            border-radius: 12px;
+            overflow: hidden;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: white;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.15);
+        }
+        
+        .kpi-icon {
+            font-size: 2.5rem;
+            opacity: 0.15;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            color: var(--primary);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            font-weight: 600;
+            padding: 1rem 1.5rem;
+        }
+        
+        .dashboard-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .dashboard-section h4 {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f0f4f9;
+        }
+        
+        .active-contract {
+            border-left: 4px solid #4caf50;
+        }
+        
+        .expired-contract {
+            border-left: 4px solid #f44336;
         }
         
         .status-pending {
-            background-color: rgba(var(--warning), 0.1);
-            color: var(--warning);
+            background-color: #ffeb3b;
+            color: #333;
         }
         
-        .status-approved {
-            background-color: rgba(var(--success), 0.1);
-            color: var(--success);
+        .status-accepted {
+            background-color: #4caf50;
+            color: white;
         }
         
         .status-rejected {
-            background-color: rgba(var(--danger), 0.1);
-            color: var(--danger);
+            background-color: #f44336;
+            color: white;
         }
         
-        .action-btn {
-            padding: 5px 10px;
-            font-size: 0.8rem;
-            border-radius: 5px;
-        }
-        
-        .user-avatar {
+        .profile-img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background-color: var(--primary);
-            color: white;
+            object-fit: cover;
+            margin-right: 10px;
+            background: #e0e6ed;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .navbar {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .action-btn i {
+            margin-right: 5px;
+        }
+        
+        .action-edit {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(67, 97, 238, 0.2);
+        }
+        
+        .action-delete {
+            background: rgba(247, 37, 133, 0.1);
+            color: var(--warning);
+            border: 1px solid rgba(247, 37, 133, 0.2);
+        }
+        
+        .action-promote {
+            background: rgba(58, 12, 163, 0.1);
+            color: var(--ceo);
+            border: 1px solid rgba(58, 12, 163, 0.2);
+        }
+        
+        .action-demote {
+            background: rgba(114, 9, 183, 0.1);
+            color: var(--admin);
+            border: 1px solid rgba(114, 9, 183, 0.2);
+        }
+        
+        .table th {
+            font-weight: 600;
+            color: #5a6d8a;
+            background: #f8fafc;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+        }
+        
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .user-info {
+            text-align: right;
+            margin-right: 10px;
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .user-role {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+            }
+            
+            .sidebar .nav-link span {
+                display: none;
+            }
+            
+            .sidebar .nav-link i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+            }
+            
+            .user-info {
+                display: none;
+            }
         }
         
         @media (max-width: 768px) {
             .sidebar {
-                min-height: auto;
-                position: relative;
-                top: 0;
+                transform: translateX(-100%);
             }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            
+            .sidebar-toggle {
+                display: block !important;
+            }
+        }
+        
+        .sidebar-toggle {
+            display: none;
+            margin-right: 15px;
+            font-size: 1.25rem;
+        }
+        
+        .section-title {
+            position: relative;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .contract-card {
+            transition: all 0.3s ease;
+        }
+        
+        .contract-card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-users me-2"></i>
-                HRM Systeem
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                            <div class="d-flex align-items-center">
-                                <div class="user-avatar me-2" id="userAvatar">AD</div>
-                                <div>
-                                    <div id="userName">Admin</div>
-                                    <small id="userRole" class="text-muted">Admin</small>
-                                </div>
-                            </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="text-center mb-4 px-3">
+            <div class="profile-img mx-auto mb-3">
+                <i class="fas fa-users"></i>
+            </div>
+            <h5 class="mb-1">HRM Systeem</h5>
+            <small class="text-muted">Human Resource Management</small>
+        </div>
+        
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item admin-only ceo-only">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Banen</span>
+                </a>
+            </li>
+            <li class="nav-item admin-only ceo-only">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-user-tie"></i>
+                    <span>Werknemers</span>
+                </a>
+            </li>
+            <li class="nav-item admin-only ceo-only">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-file-contract"></i>
+                    <span>Contracten</span>
+                </a>
+            </li>
+            <li class="nav-item admin-only ceo-only">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>Vacatures</span>
+                </a>
+            </li>
+            <li class="nav-item ceo-only">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Sollicitaties</span>
+                </a>
+            </li>
+            <li class="nav-item employee-only">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-search"></i>
+                    <span>Vacatures zoeken</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-cog"></i>
+                    <span>Instellingen</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white rounded-3 mb-4">
+            <div class="container-fluid">
+                <button class="btn btn-sm btn-light sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="d-flex align-items-center ms-auto">
+                    <div class="dropdown me-3 position-relative">
+                        <a class="text-dark" href="#" role="button" id="notificationsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-bell fs-5"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger notification-badge">
+                                3
+                            </span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                            <li><h6 class="dropdown-header">Meldingen</h6></li>
+                            <li><a class="dropdown-item" href="#">Nieuwe sollicitatie ontvangen</a></li>
+                            <li><a class="dropdown-item" href="#">Contract bijna verlopen</a></li>
+                            <li><a class="dropdown-item" href="#">Nieuwe vacature geplaatst</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="dropdown">
+                        <div class="user-dropdown" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="user-info">
+                                <div class="user-name" id="user-name">Admin User</div>
+                                <div class="user-role"><span class="badge role-badge" id="user-role">Admin</span></div>
+                            </div>
+                            <div class="profile-img" id="user-profile-img">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                             <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profiel</a></li>
                             <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Instellingen</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#" id="logoutLink"><i class="fas fa-sign-out-alt me-2"></i>Uitloggen</a></li>
+                            <li><a class="dropdown-item" href="#" id="logout-btn"><i class="fas fa-sign-out-alt me-2"></i>Uitloggen</a></li>
                         </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 d-md-block sidebar collapse" id="sidebarMenu">
-                <div class="position-sticky pt-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#" data-section="dashboard">
-                                <i class="fas fa-tachometer-alt"></i>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-section="employees">
-                                <i class="fas fa-users"></i>
-                                Werknemers
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-section="vacancies">
-                                <i class="fas fa-briefcase"></i>
-                                Vacatures
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-section="applications">
-                                <i class="fas fa-file-alt"></i>
-                                Sollicitaties
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#" data-section="contracts">
-                                <i class="fas fa-file-contract"></i>
-                                Contracten
-                            </a>
-                        </li>
-                        <li class="nav-item" id="adminSection" style="display: none;">
-                            <a class="nav-link" href="#" data-section="admin">
-                                <i class="fas fa-cog"></i>
-                                Admin
-                            </a>
-                        </li>
-                    </ul>
+                    </div>
                 </div>
             </div>
-
-            <!-- Main Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
-                <div id="welcomeBanner" class="welcome-banner">
-                    <div class="row align-items-center">
-                        <div class="col-md-8">
-                            <h2 id="welcomeMessage">Welkom terug, Admin</h2>
-                            <p class="mb-0">Hier is een overzicht van uw HRM-systeem</p>
-                        </div>
-                        <div class="col-md-4 text-md-end">
-                            <span class="badge rounded-pill bg-light text-dark" id="userBadge">Admin</span>
+        </nav>
+        
+        <!-- Dashboard Content -->
+        <div class="container-fluid">
+            <!-- KPI Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="kpi-card card border-0">
+                        <div class="card-body position-relative">
+                            <h5 class="card-title text-muted mb-3">Totaal werknemers</h5>
+                            <h2 class="card-text mb-0">42</h2>
+                            <i class="fas fa-users kpi-icon"></i>
                         </div>
                     </div>
                 </div>
-
-                <!-- Dashboard Content -->
-                <div id="dashboardSection">
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="kpi-card card border-0">
+                        <div class="card-body position-relative">
+                            <h5 class="card-title text-muted mb-3">Open vacatures</h5>
+                            <h2 class="card-text mb-0">8</h2>
+                            <i class="fas fa-bullhorn kpi-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="kpi-card card border-0">
+                        <div class="card-body position-relative">
+                            <h5 class="card-title text-muted mb-3">Actieve contracten</h5>
+                            <h2 class="card-text mb-0">37</h2>
+                            <i class="fas fa-file-contract kpi-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 mb-3">
+                    <div class="kpi-card card border-0">
+                        <div class="card-body position-relative">
+                            <h5 class="card-title text-muted mb-3">Nieuwe sollicitaties</h5>
+                            <h2 class="card-text mb-0">12</h2>
+                            <i class="fas fa-clipboard-list kpi-icon"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Role-specific sections -->
+            <div class="admin-only">
+                <!-- Admin Dashboard -->
+                <div class="dashboard-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">Banen Beheer</h4>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addJobModal">
+                            <i class="fas fa-plus me-2"></i>Nieuwe Baan
+                        </button>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Baan Titel</th>
+                                    <th>Afdeling</th>
+                                    <th>CEO</th>
+                                    <th>Werknemers</th>
+                                    <th>Acties</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Software Developer</td>
+                                    <td>IT</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="profile-img">JD</div>
+                                            <span>John Doe</span>
+                                        </div>
+                                    </td>
+                                    <td>15</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <div class="action-btn action-promote me-2">
+                                                <i class="fas fa-user-tie"></i> CEO
+                                            </div>
+                                            <div class="action-btn action-edit me-2">
+                                                <i class="fas fa-edit"></i>
+                                            </div>
+                                            <div class="action-btn action-delete">
+                                                <i class="fas fa-trash"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HR Manager</td>
+                                    <td>Human Resources</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="profile-img">SS</div>
+                                            <span>Sara Smith</span>
+                                        </div>
+                                    </td>
+                                    <td>8</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <div class="action-btn action-demote me-2">
+                                                <i class="fas fa-user"></i> Werknemer
+                                            </div>
+                                            <div class="action-btn action-edit me-2">
+                                                <i class="fas fa-edit"></i>
+                                            </div>
+                                            <div class="action-btn action-delete">
+                                                <i class="fas fa-trash"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Sales Executive</td>
+                                    <td>Verkoop</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="profile-img">MJ</div>
+                                            <span>Mike Johnson</span>
+                                        </div>
+                                    </td>
+                                    <td>12</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <div class="action-btn action-promote me-2">
+                                                <i class="fas fa-user-tie"></i> CEO
+                                            </div>
+                                            <div class="action-btn action-edit me-2">
+                                                <i class="fas fa-edit"></i>
+                                            </div>
+                                            <div class="action-btn action-delete">
+                                                <i class="fas fa-trash"></i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="ceo-only">
+                <!-- CEO Dashboard -->
+                <div class="dashboard-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">Mijn Afdeling</h4>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVacancyModal">
+                            <i class="fas fa-plus me-2"></i>Nieuwe Vacature
+                        </button>
+                    </div>
+                    
                     <div class="row">
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Werknemers</h5>
-                                    <i class="fas fa-users text-primary"></i>
+                        <div class="col-lg-6 mb-4 mb-lg-0">
+                            <h5 class="mb-3">Mijn Team</h5>
+                            <div class="list-group">
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="profile-img">EB</div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="mb-0">Emma Brown</h6>
+                                            <small class="text-muted">Software Developer</small>
+                                        </div>
+                                        <small class="text-muted">emma@voorbeeld.nl</small>
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <h3 class="card-title" id="employeesCount">0</h3>
-                                    <p class="card-text">Totaal aantal werknemers</p>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="profile-img">DW</div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="mb-0">David Wilson</h6>
+                                            <small class="text-muted">Frontend Developer</small>
+                                        </div>
+                                        <small class="text-muted">david@voorbeeld.nl</small>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Openstaande vacatures</h5>
-                                    <i class="fas fa-briefcase text-warning"></i>
-                                </div>
-                                <div class="card-body">
-                                    <h3 class="card-title" id="vacanciesCount">0</h3>
-                                    <p class="card-text">Vacatures wachtend op sollicitaties</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Nieuwe sollicitaties</h5>
-                                    <i class="fas fa-file-alt text-success"></i>
-                                </div>
-                                <div class="card-body">
-                                    <h3 class="card-title" id="applicationsCount">0</h3>
-                                    <p class="card-text">Te behandelen sollicitaties</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mt-4">
-                        <div class="col-md-8">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">Recente activiteiten</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th>Datum</th>
-                                                    <th>Activiteit</th>
-                                                    <th>Status</th>
-                                                    <th>Actie</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="recentActivities">
-                                                <!-- Dynamisch ingevuld -->
-                                            </tbody>
-                                        </table>
+                                <div class="list-group-item d-flex align-items-center">
+                                    <div class="profile-img">SG</div>
+                                    <div class="flex-grow-1 ms-3">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="mb-0">Sophia Garcia</h6>
+                                            <small class="text-muted">UX Designer</small>
+                                        </div>
+                                        <small class="text-muted">sophia@voorbeeld.nl</small>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h5 class="mb-0">Verlopen contracten</h5>
-                                </div>
+                        
+                        <div class="col-lg-6">
+                            <h5 class="mb-3">Openstaande Vacatures</h5>
+                            <div class="list-group">
+                                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">Senior Backend Developer</h6>
+                                        <small class="text-muted">Deadline: 15-08-2023</small>
+                                    </div>
+                                    <span class="badge bg-success">Actief</span>
+                                </a>
+                                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">DevOps Engineer</h6>
+                                        <small class="text-muted">Deadline: 20-08-2023</small>
+                                    </div>
+                                    <span class="badge bg-success">Actief</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="employee-only">
+                <!-- Employee Dashboard -->
+                <div class="dashboard-section">
+                    <h4 class="mb-4">Mijn Contracten</h4>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card contract-card active-contract h-100">
                                 <div class="card-body">
-                                    <div id="expiringContracts">
-                                        <!-- Dynamisch ingevuld -->
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <h5 class="card-title mb-0">Software Developer</h5>
+                                        <span class="badge bg-success">Actief</span>
+                                    </div>
+                                    <h6 class="card-subtitle mb-3 text-muted">IT Afdeling</h6>
+                                    <p class="card-text">Fulltime contract voor onbepaalde tijd met een proeftijd van 2 maanden. Verantwoordelijk voor het ontwikkelen en onderhouden van webapplicaties.</p>
+                                    <div class="d-flex justify-content-between text-muted mt-3">
+                                        <div>
+                                            <small>Start: 01-01-2022</small>
+                                        </div>
+                                        <div>
+                                            <small>Eind: -</small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Werknemers Sectie -->
-                <div id="employeesSection" style="display: none;">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Werknemersbeheer</h5>
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
-                                <i class="fas fa-plus me-1"></i> Nieuwe werknemer
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Naam</th>
-                                            <th>Functie</th>
-                                            <th>Status</th>
-                                            <th>Laatste activiteit</th>
-                                            <th>Acties</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="employeesTable">
-                                        <!-- Dynamisch ingevuld -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Vacatures Sectie -->
-                <div id="vacanciesSection" style="display: none;">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Vacaturebeheer</h5>
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addVacancyModal">
-                                <i class="fas fa-plus me-1"></i> Nieuwe vacature
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Titel</th>
-                                            <th>Afdeling</th>
-                                            <th>Sollicitaties</th>
-                                            <th>Status</th>
-                                            <th>Acties</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="vacanciesTable">
-                                        <!-- Dynamisch ingevuld -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Sollicitaties Sectie -->
-                <div id="applicationsSection" style="display: none;">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Sollicitatiebeheer</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Sollicitant</th>
-                                            <th>Vacature</th>
-                                            <th>Datum</th>
-                                            <th>Status</th>
-                                            <th>Acties</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="applicationsTable">
-                                        <!-- Dynamisch ingevuld -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Contracten Sectie -->
-                <div id="contractsSection" style="display: none;">
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Contractbeheer</h5>
-                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addContractModal">
-                                <i class="fas fa-plus me-1"></i> Nieuw contract
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th>Werknemer</th>
-                                            <th>Functie</th>
-                                            <th>Looptijd</th>
-                                            <th>Status</th>
-                                            <th>Acties</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="contractsTable">
-                                        <!-- Dynamisch ingevuld -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Admin Sectie -->
-                <div id="adminSection" style="display: none;">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0">Admininstellingen</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="card mb-4">
-                                        <div class="card-header">
-                                            <h6 class="mb-0">CEO Beheer</h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <button class="btn btn-sm btn-success mb-2" data-bs-toggle="modal" data-bs-target="#promoteModal">
-                                                <i class="fas fa-user-plus me-1"></i> CEO Aanstellen
-                                            </button>
-                                            <button class="btn btn-sm btn-danger mb-2" data-bs-toggle="modal" data-bs-target="#fireModal">
-                                                <i class="fas fa-user-minus me-1"></i> CEO Ontslaan
-                                            </button>
-                                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="card contract-card expired-contract h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <h5 class="card-title mb-0">Junior Developer</h5>
+                                        <span class="badge bg-danger">Verlopen</span>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h6 class="mb-0">Systeeminstellingen</h6>
+                                    <h6 class="card-subtitle mb-3 text-muted">IT Afdeling</h6>
+                                    <p class="card-text">Tijdelijk contract voor 1 jaar als junior developer. Verantwoordelijk voor het assisteren bij het ontwikkelen van kleinere modules en bug fixes.</p>
+                                    <div class="d-flex justify-content-between text-muted mt-3">
+                                        <div>
+                                            <small>Start: 01-01-2021</small>
                                         </div>
-                                        <div class="card-body">
-                                            <button class="btn btn-sm btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#addJobModal">
-                                                <i class="fas fa-briefcase me-1"></i> Nieuwe Baan
-                                            </button>
+                                        <div>
+                                            <small>Eind: 31-12-2021</small>
                                         </div>
                                     </div>
                                 </div>
@@ -497,554 +710,299 @@
                         </div>
                     </div>
                 </div>
-            </main>
+                
+                <div class="dashboard-section">
+                    <h4 class="mb-4">Openstaande Vacatures</h4>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Functie</th>
+                                    <th>Afdeling</th>
+                                    <th>Eisen</th>
+                                    <th>Deadline</th>
+                                    <th>Acties</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Senior Backend Developer</td>
+                                    <td>IT</td>
+                                    <td>5+ jaar ervaring, Node.js, Python</td>
+                                    <td>15-08-2023</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-file-alt me-1"></i> Solliciteren
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>DevOps Engineer</td>
+                                    <td>IT</td>
+                                    <td>3+ jaar ervaring, AWS, Docker</td>
+                                    <td>20-08-2023</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-file-alt me-1"></i> Solliciteren
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HR Medewerker</td>
+                                    <td>Human Resources</td>
+                                    <td>HBO, 2+ jaar ervaring</td>
+                                    <td>10-08-2023</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary">
+                                            <i class="fas fa-file-alt me-1"></i> Solliciteren
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activity -->
+            <div class="dashboard-section">
+                <h4 class="mb-4">Recente Activiteit</h4>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <div class="bg-success bg-opacity-10 text-success rounded-circle p-2">
+                                    <i class="fas fa-user-plus fs-5"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-1">Nieuwe werknemer toegevoegd</h6>
+                                    <small class="text-muted">2 minuten geleden</small>
+                                </div>
+                                <p class="mb-0">Lisa Anderson is toegevoegd als HR Medewerker</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2">
+                                    <i class="fas fa-file-contract fs-5"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-1">Contract verlengd</h6>
+                                    <small class="text-muted">1 uur geleden</small>
+                                </div>
+                                <p class="mb-0">Contract van David Wilson is verlengd tot 2025</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0">
+                                <div class="bg-info bg-opacity-10 text-info rounded-circle p-2">
+                                    <i class="fas fa-bullhorn fs-5"></i>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 ms-3">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-1">Nieuwe vacature geplaatst</h6>
+                                    <small class="text-muted">4 uur geleden</small>
+                                </div>
+                                <p class="mb-0">Vacature voor DevOps Engineer gepubliceerd</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
+    
     <!-- Modals -->
-    <!-- CEO Aanstellen Modal -->
-    <div class="modal fade" id="promoteModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">CEO Aanstellen</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="jobSelect" class="form-label">Selecteer Baan</label>
-                        <select id="jobSelect" class="form-select"></select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="promoteEmail" class="form-label">E-mailadres werknemer</label>
-                        <input type="email" id="promoteEmail" class="form-control" placeholder="email@voorbeeld.nl">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="promoteBtn" class="btn btn-primary">Aanstellen</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- CEO Ontslaan Modal -->
-    <div class="modal fade" id="fireModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">CEO Ontslaan</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="fireJobSelect" class="form-label">Selecteer Baan</label>
-                        <select id="fireJobSelect" class="form-select"></select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="fireBtn" class="btn btn-danger">Ontslaan</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Baan Toevoegen Modal -->
-    <div class="modal fade" id="addJobModal" tabindex="-1">
+    <!-- Add Job Modal -->
+    <div class="modal fade" id="addJobModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Nieuwe Baan Toevoegen</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="jobTitle" class="form-label">Baan Titel</label>
-                        <input type="text" id="jobTitle" class="form-control" placeholder="Bijv. Verkoop Manager">
-                    </div>
-                    <div class="mb-3">
-                        <label for="jobDescription" class="form-label">Omschrijving</label>
-                        <textarea id="jobDescription" class="form-control" rows="3" placeholder="Taken en verantwoordelijkheden"></textarea>
-                    </div>
+                    <form>
+                        <div class="mb-3">
+                            <label for="jobTitle" class="form-label">Baan Titel</label>
+                            <input type="text" class="form-control" id="jobTitle" placeholder="Bijv. Software Developer">
+                        </div>
+                        <div class="mb-3">
+                            <label for="department" class="form-label">Afdeling</label>
+                            <select class="form-select" id="department">
+                                <option selected>Selecteer afdeling</option>
+                                <option>IT</option>
+                                <option>Human Resources</option>
+                                <option>Verkoop</option>
+                                <option>Marketing</option>
+                                <option>Financiën</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jobDescription" class="form-label">Omschrijving</label>
+                            <textarea class="form-control" id="jobDescription" rows="3" placeholder="Beschrijf de verantwoordelijkheden en taken..."></textarea>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="addJobBtn" class="btn btn-primary">Toevoegen</button>
+                    <button type="button" class="btn btn-primary">Opslaan</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Werknemer Toevoegen Modal -->
-    <div class="modal fade" id="addEmployeeModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Nieuwe Werknemer Toevoegen</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="employeeName" class="form-label">Volledige naam</label>
-                        <input type="text" id="employeeName" class="form-control" placeholder="Bijv. Jan Jansen">
-                    </div>
-                    <div class="mb-3">
-                        <label for="employeeEmail" class="form-label">E-mailadres</label>
-                        <input type="email" id="employeeEmail" class="form-control" placeholder="email@voorbeeld.nl">
-                    </div>
-                    <div class="mb-3">
-                        <label for="employeeJob" class="form-label">Functie</label>
-                        <select id="employeeJob" class="form-select"></select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="addEmployeeBtn" class="btn btn-primary">Toevoegen</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Vacature Toevoegen Modal -->
-    <div class="modal fade" id="addVacancyModal" tabindex="-1">
+    
+    <!-- Add Vacancy Modal -->
+    <div class="modal fade" id="addVacancyModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Nieuwe Vacature Plaatsen</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="vacancyTitle" class="form-label">Titel</label>
-                        <input type="text" id="vacancyTitle" class="form-control" placeholder="Bijv. Senior Developer">
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacancyJob" class="form-label">Selecteer Baan</label>
-                        <select id="vacancyJob" class="form-select"></select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacancyDescription" class="form-label">Omschrijving</label>
-                        <textarea id="vacancyDescription" class="form-control" rows="3" placeholder="Functieomschrijving"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vacancyRequirements" class="form-label">Eisen</label>
-                        <textarea id="vacancyRequirements" class="form-control" rows="3" placeholder="Vereiste kwalificaties"></textarea>
-                    </div>
+                    <form>
+                        <div class="mb-3">
+                            <label for="vacancyTitle" class="form-label">Functietitel</label>
+                            <input type="text" class="form-control" id="vacancyTitle" placeholder="Bijv. Senior Developer">
+                        </div>
+                        <div class="mb-3">
+                            <label for="vacancyDepartment" class="form-label">Afdeling</label>
+                            <input type="text" class="form-control" id="vacancyDepartment" value="IT" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="requirements" class="form-label">Eisen</label>
+                            <textarea class="form-control" id="requirements" rows="3" placeholder="Vereiste vaardigheden en ervaring..."></textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="startDate" class="form-label">Startdatum</label>
+                                <input type="date" class="form-control" id="startDate">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="endDate" class="form-label">Deadline</label>
+                                <input type="date" class="form-control" id="endDate">
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="addVacancyBtn" class="btn btn-primary">Plaatsen</button>
+                    <button type="button" class="btn btn-primary">Publiceren</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Contract Toevoegen Modal -->
-    <div class="modal fade" id="addContractModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Nieuw Contract Aanmaken</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="contractEmployee" class="form-label">Werknemer</label>
-                        <select id="contractEmployee" class="form-select"></select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="contractJob" class="form-label">Baan</label>
-                        <select id="contractJob" class="form-select"></select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="contractSalary" class="form-label">Salaris</label>
-                        <input type="text" id="contractSalary" class="form-control" placeholder="Bijv. €3000 per maand">
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="contractStartDate" class="form-label">Startdatum</label>
-                            <input type="date" id="contractStartDate" class="form-control">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="contractEndDate" class="form-label">Einddatum</label>
-                            <input type="date" id="contractEndDate" class="form-control">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="contractTerms" class="form-label">Voorwaarden</label>
-                        <textarea id="contractTerms" class="form-control" rows="3" placeholder="Contractuele voorwaarden"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuleren</button>
-                    <button type="button" id="addContractBtn" class="btn btn-primary">Aanmaken</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-  
-    <!-- [HEAD CONTENT IDENTIEK AAN VORIGE CODE] -
-    <!-- [NAVBAR, SIDEBAR EN MAIN CONTENT IDENTIEK AAN VORIGE CODE] -->
-
-    <script type="module">
-        // Importeer Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getAuth, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, addDoc, collection, getDocs, query, where, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-        
-        // Firebase configuratie
+    <!-- Bootstrap & Firebase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Firebase configuration
         const firebaseConfig = {
-              apiKey: "AIzaSyBl1JNsn64WjiPorFpCN48aboNdSzS1Py4",
-  authDomain: "utrechtcontracten.firebaseapp.com",
-  projectId: "utrechtcontracten",
-  storageBucket: "utrechtcontracten.firebasestorage.app",
-  messagingSenderId: "1088300511903",
-  appId: "1:1088300511903:web:f10ba519b201acc237a8aa",
-  measurementId: "G-ZRF8GZDNLV"
+            apiKey: "AIzaSyD5x5cQ4nq1XQc0z7f6QkLr8W2bYd6Jt3E",
+            authDomain: "hrm-system-demo.firebaseapp.com",
+            projectId: "hrm-system-demo",
+            storageBucket: "hrm-system-demo.appspot.com",
+            messagingSenderId: "123456789012",
+            appId: "1:123456789012:web:abcdef1234567890abcdef"
         };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Globale variabelen
-        let currentUserRole = '';
-        let currentUserJob = '';
-
-        // ==================== CORE FUNCTIES ====================
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) {
-                window.location.href = "index.html";
-            } else {
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    currentUserRole = userData.role;
-                    currentUserJob = userData.job || '';
-                    
-                    updateUI(userData);
-                    loadDashboardData();
-                    setupRoleBasedUI();
-                }
-            }
-        });
-
-        function setupRoleBasedUI() {
-            // Verberg admin sectie voor niet-admins
-            if (currentUserRole !== 'admin') {
-                document.getElementById('adminSection').style.display = 'none';
-            }
-            
-            // Pas zichtbaarheid van knoppen aan op basis van rol
-            const addEmployeeBtn = document.querySelector('[data-section="employees"] + .card-header .btn');
-            const addVacancyBtn = document.querySelector('[data-section="vacancies"] + .card-header .btn');
-            const addContractBtn = document.querySelector('[data-section="contracts"] + .card-header .btn');
-            
-            if (currentUserRole === 'werknemer') {
-                if (addEmployeeBtn) addEmployeeBtn.style.display = 'none';
-                if (addVacancyBtn) addVacancyBtn.style.display = 'none';
-                if (addContractBtn) addContractBtn.style.display = 'none';
-            } else if (currentUserRole === 'ceo') {
-                // CEO's kunnen alleen vacatures en contracten voor hun eigen afdeling toevoegen
-                if (addEmployeeBtn) addEmployeeBtn.style.display = 'none';
-            }
-        }
-
-        // Uitloggen
-        document.getElementById('logoutLink').addEventListener('click', async () => {
-            await signOut(auth);
-            window.location.href = "index.html";
-        });
-
-        // ==================== DASHBOARD FUNCTIES ====================
-        async function loadDashboardData() {
-            // Werknemers tellen
-            const employeesQuery = currentUserRole === 'ceo' ? 
-                query(collection(db, "users"), where("job", "==", currentUserJob)) : 
-                query(collection(db, "users"), where("role", "==", "werknemer"));
-                
-            const employeesSnapshot = await getDocs(employeesQuery);
-            document.getElementById('employeesCount').textContent = employeesSnapshot.size;
-
-            // Vacatures tellen
-            const vacanciesQuery = currentUserRole === 'ceo' ? 
-                query(collection(db, "vacatures"), where("jobId", "==", currentUserJob)) : 
-                collection(db, "vacatures");
-                
-            const vacanciesSnapshot = await getDocs(vacanciesQuery);
-            document.getElementById('vacanciesCount').textContent = vacanciesSnapshot.size;
-
-            // Sollicitaties tellen
-            const applicationsQuery = currentUserRole === 'ceo' ? 
-                query(collection(db, "applications"), 
-                    where("jobTitle", "==", currentUserJob),
-                    where("status", "==", "pending")) : 
-                query(collection(db, "applications"), where("status", "==", "pending"));
-                
-            const applicationsSnapshot = await getDocs(applicationsQuery);
-            document.getElementById('applicationsCount').textContent = applicationsSnapshot.size;
-
-            // Laad recente activiteiten
-            loadRecentActivities();
-            
-            // Laad verlopen contracten
-            loadExpiringContracts();
-            
-            // Vul dropdowns
-            loadJobDropdowns();
-            
-            // Laad werknemers voor contracten
-            loadEmployeesForContracts();
-            
-            // Laad rol-specifieke content
-            if (currentUserRole === 'ceo') {
-                loadCEOSpecificData();
-            }
-        }
-
-        // CEO-specifieke data laden
-        async function loadCEOSpecificData() {
-            const myEmployeesList = document.getElementById('myEmployeesList');
-            if (!myEmployeesList) return;
-            
-            myEmployeesList.innerHTML = "<h6>Mijn Werknemers:</h6><ul class='list-group' id='myEmployeesListItems'></ul>";
-            
-            const myEmployeesListItems = document.getElementById('myEmployeesListItems');
-            myEmployeesListItems.innerHTML = '';
-            
-            // Haal contracten op voor deze job
-            const contractsQuery = query(collection(db, "contracts"), where("jobId", "==", currentUserJob));
-            const contractsSnapshot = await getDocs(contractsQuery);
-            
-            for (const contractDoc of contractsSnapshot.docs) {
-                const contract = contractDoc.data();
-                const userSnap = await getDoc(doc(db, "users", contract.employeeId));
-                
-                if (userSnap.exists()) {
-                    const user = userSnap.data();
-                    const li = document.createElement('li');
-                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
-                    li.innerHTML = `
-                        <div>
-                            <strong>${user.name || user.email}</strong>
-                            <p class="mb-0 small">Contract: ${contract.jobTitle} (${contract.salary})</p>
-                        </div>
-                        <span class="badge ${isContractActive(contract) ? 'bg-success' : 'bg-secondary'}">
-                            ${isContractActive(contract) ? 'Actief' : 'Verlopen'}
-                        </span>
-                    `;
-                    myEmployeesListItems.appendChild(li);
-                }
-            }
-        }
-
-        // Contractstatus controleren
-        function isContractActive(contract) {
-            if (!contract.startDate || !contract.endDate) return false;
-            const now = new Date();
-            const start = new Date(contract.startDate);
-            const end = new Date(contract.endDate);
-            return now >= start && now <= end;
-        }
-
-        async function loadRecentActivities() {
-            // [Implementatie identiek aan vorige versie]
-        }
-
-        async function loadExpiringContracts() {
-            // [Implementatie identiek aan vorige versie]
-        }
-
-        // ==================== ADMIN FUNCTIES ====================
-        async function promoteToCEO() {
-            // [Implementatie identiek aan vorige versie]
-        }
-
-        async function fireCEO() {
-            // [Implementatie identiek aan vorige versie]
-        }
-
-        async function addJob() {
-            // [Implementatie identiek aan vorige versie]
-        }
-
-        // ==================== CEO FUNCTIES ====================
-        async function addVacancy() {
-            const title = document.getElementById("vacancyTitle").value;
-            const jobId = currentUserRole === 'ceo' ? currentUserJob : document.getElementById("vacancyJob").value;
-            const description = document.getElementById("vacancyDescription").value;
-            const requirements = document.getElementById("vacancyRequirements").value;
-            
-            try {
-                // Voor CEO's gebruiken we hun eigen jobId
-                if (currentUserRole === 'ceo' && !jobId) {
-                    alert("CEO moet aan een baan zijn toegewezen");
-                    return;
-                }
-                
-                const jobDoc = await getDoc(doc(db, "jobs", jobId));
-                if (!jobDoc.exists()) throw new Error("Baan niet gevonden");
-                
-                await addDoc(collection(db, "vacatures"), {
-                    title,
-                    jobId,
-                    jobTitle: jobDoc.data().title,
-                    description,
-                    requirements,
-                    status: "open",
-                    createdAt: new Date().toISOString(),
-                    createdBy: auth.currentUser.uid
-                });
-                
-                alert("Vacature succesvol geplaatst!");
-                $('#addVacancyModal').modal('hide');
-                loadDashboardData();
-            } catch (error) {
-                alert(`Fout: ${error.message}`);
-            }
-        }
-
-        // ==================== CONTRACT FUNCTIES ====================
-        async function addContract() {
-            const employeeId = document.getElementById("contractEmployee").value;
-            const jobId = currentUserRole === 'ceo' ? currentUserJob : document.getElementById("contractJob").value;
-            const salary = document.getElementById("contractSalary").value;
-            const startDate = document.getElementById("contractStartDate").value;
-            const endDate = document.getElementById("contractEndDate").value;
-            const terms = document.getElementById("contractTerms").value;
-            
-            try {
-                // Voor CEO's gebruiken we hun eigen jobId
-                if (currentUserRole === 'ceo' && !jobId) {
-                    alert("CEO moet aan een baan zijn toegewezen");
-                    return;
-                }
-                
-                const [userDoc, jobDoc] = await Promise.all([
-                    getDoc(doc(db, "users", employeeId)),
-                    getDoc(doc(db, "jobs", jobId))
-                ]);
-                
-                if (!userDoc.exists()) throw new Error("Werknemer niet gevonden");
-                if (!jobDoc.exists()) throw new Error("Baan niet gevonden");
-                
-                await addDoc(collection(db, "contracts"), {
-                    employeeId,
-                    employeeName: userDoc.data().name || userDoc.data().email,
-                    jobId,
-                    jobTitle: jobDoc.data().title,
-                    salary,
-                    startDate,
-                    endDate,
-                    terms,
-                    signed: false,
-                    createdAt: new Date().toISOString(),
-                    createdBy: auth.currentUser.uid
-                });
-                
-                alert("Contract succesvol aangemaakt!");
-                $('#addContractModal').modal('hide');
-                loadDashboardData();
-            } catch (error) {
-                alert(`Fout: ${error.message}`);
-            }
-        }
-
-        // ==================== HELPER FUNCTIES ====================
-        async function loadJobDropdowns() {
-            const jobsQuery = currentUserRole === 'ceo' ? 
-                query(collection(db, "jobs"), where("ceoId", "==", auth.currentUser.uid)) : 
-                collection(db, "jobs");
-                
-            const jobsSnapshot = await getDocs(jobsQuery);
-            const dropdowns = [
-                "jobSelect", "fireJobSelect", "vacancyJob", 
-                "contractJob", "employeeJob"
-            ];
-            
-            dropdowns.forEach(id => {
-                const select = document.getElementById(id);
-                if (select) {
-                    select.innerHTML = '';
-                    jobsSnapshot.forEach(doc => {
-                        const option = document.createElement('option');
-                        option.value = doc.id;
-                        option.textContent = doc.data().title;
-                        select.appendChild(option);
-                    });
-                    
-                    // Voor CEO's selecteren we automatisch hun eigen baan
-                    if (currentUserRole === 'ceo' && currentUserJob && jobsSnapshot.docs.some(d => d.id === currentUserJob)) {
-                        select.value = currentUserJob;
-                    }
-                }
-            });
-        }
-
-        async function loadEmployeesForContracts() {
-            const select = document.getElementById("contractEmployee");
-            const employeesQuery = currentUserRole === 'ceo' ? 
-                query(collection(db, "users"), where("job", "==", currentUserJob)) : 
-                query(collection(db, "users"), where("role", "==", "werknemer"));
-                
-            const employeesSnapshot = await getDocs(employeesQuery);
-            
-            select.innerHTML = '';
-            employeesSnapshot.forEach(doc => {
-                const userData = doc.data();
-                const option = document.createElement('option');
-                option.value = doc.id;
-                option.textContent = userData.name || userData.email;
-                select.appendChild(option);
-            });
-        }
-
-        function updateUI(userData) {
-            document.getElementById('userName').textContent = userData.name || userData.email;
-            document.getElementById('userRole').textContent = userData.role;
-            document.getElementById('userAvatar').textContent = userData.name ? 
-                userData.name.charAt(0).toUpperCase() : 
-                userData.email.charAt(0).toUpperCase();
-                
-            document.getElementById('welcomeMessage').textContent = `Welkom terug, ${userData.name || userData.email}`;
-            
-            const badge = document.getElementById('userBadge');
-            badge.textContent = userData.role;
-            badge.className = `badge rounded-pill bg-${userData.role === 'admin' ? 'primary' : userData.role === 'ceo' ? 'info' : 'success'}`;
-        }
-
-        // ==================== EVENT LISTENERS ====================
-        document.getElementById('promoteBtn')?.addEventListener('click', promoteToCEO);
-        document.getElementById('fireBtn')?.addEventListener('click', fireCEO);
-        document.getElementById('addJobBtn')?.addEventListener('click', addJob);
-        document.getElementById('addVacancyBtn')?.addEventListener('click', addVacancy);
-        document.getElementById('addContractBtn')?.addEventListener('click', addContract);
         
-        // Sidebar navigatie
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-                this.classList.add('active');
-                
-                document.querySelectorAll('main > div').forEach(section => {
-                    section.style.display = 'none';
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // DOM Elements
+        const logoutBtn = document.getElementById('logout-btn');
+        const userNameElement = document.getElementById('user-name');
+        const userRoleElement = document.getElementById('user-role');
+        const userProfileImg = document.getElementById('user-profile-img');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        
+        // Role-based UI elements
+        const adminElements = document.querySelectorAll('.admin-only');
+        const ceoElements = document.querySelectorAll('.ceo-only');
+        const employeeElements = document.querySelectorAll('.employee-only');
+        
+        // Authentication State Listener
+        auth.onAuthStateChanged(user => {
+            if (!user) {
+                // Redirect to login page if not authenticated
+                window.location.href = 'index.html';
+            } else {
+                // Get user data from Firestore
+                db.collection('users').doc(user.uid).get().then(doc => {
+                    if (doc.exists) {
+                        const userData = doc.data();
+                        userNameElement.textContent = userData.name;
+                        userRoleElement.textContent = userData.role;
+                        userRoleElement.className = 'badge role-badge badge-' + 
+                            (userData.role === 'admin' ? 'admin' : 
+                             userData.role === 'ceo' ? 'ceo' : 'employee');
+                        
+                        // Update profile image with initials
+                        const nameParts = userData.name.split(' ');
+                        const initials = nameParts[0][0] + (nameParts.length > 1 ? nameParts[1][0] : nameParts[0][1]);
+                        userProfileImg.innerHTML = initials;
+                        
+                        // Show/hide UI elements based on role
+                        adminElements.forEach(el => el.style.display = userData.role === 'admin' ? 'block' : 'none');
+                        ceoElements.forEach(el => el.style.display = userData.role === 'ceo' ? 'block' : 'none');
+                        employeeElements.forEach(el => el.style.display = userData.role === 'werknemer' ? 'block' : 'none');
+                    }
+                }).catch(error => {
+                    console.error('Error getting user document:', error);
                 });
-                
-                const sectionId = this.getAttribute('data-section') + 'Section';
-                document.getElementById(sectionId).style.display = 'block';
-                
-                // Rol-specifieke content laden
-                if (this.getAttribute('data-section') === 'employees' && currentUserRole === 'ceo') {
-                    loadCEOSpecificData();
+            }
+        });
+        
+        // Logout Function
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut().then(() => {
+                // Sign-out successful, redirect happens in auth state listener
+            });
+        });
+        
+        // Sidebar Toggle for Mobile
+        sidebarToggle.addEventListener('click', () => {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('active');
+        });
+        
+        // Simulate role switching for demo
+        document.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.classList.contains('action-promote')) {
+                    userRoleElement.textContent = 'ceo';
+                    userRoleElement.className = 'badge role-badge badge-ceo';
+                    adminElements.forEach(el => el.style.display = 'none');
+                    ceoElements.forEach(el => el.style.display = 'block');
+                    employeeElements.forEach(el => el.style.display = 'none');
+                    alert('Werknemer succesvol benoemd tot CEO!');
+                } else if (this.classList.contains('action-demote')) {
+                    userRoleElement.textContent = 'werknemer';
+                    userRoleElement.className = 'badge role-badge badge-employee';
+                    adminElements.forEach(el => el.style.display = 'none');
+                    ceoElements.forEach(el => el.style.display = 'none');
+                    employeeElements.forEach(el => el.style.display = 'block');
+                    alert('CEO succesvol teruggezet naar werknemer!');
                 }
             });
         });
     </script>
-
-
 </body>
 </html>
