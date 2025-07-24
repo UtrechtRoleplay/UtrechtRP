@@ -3,365 +3,664 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRM Systeem | Inloggen</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Utrecht Roleplay</title>
     <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
         }
-        
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa, #e4edf9);
-            color: #333;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: #000000;
+            background-color: #ffffff;
+            overflow-x: hidden;
         }
-        
-        .auth-container {
-            max-width: 450px;
+
+        /* Header/Navigatie */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            transition: 0.5s;
+            background-color: rgba(5, 5, 5, 0.842);
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #168cf5;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: #168cf5;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 18px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #5cadff;
+        }
+
+        /* Hero Parallax Section */
+        .parallax-hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
         }
-        
-        .auth-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            position: relative;
-        }
-        
-        .auth-header::before {
+
+        .parallax-hero::before {
             content: "";
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='rgba(255,255,255,0.1)' stroke-width='2'/%3E%3C/svg%3E");
+            background: url('lossantos.jpg') center/cover no-repeat fixed;
+            z-index: -1;
         }
-        
-        .auth-header h1 {
-            position: relative;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 0 20px;
+            z-index: 1;
         }
-        
-        .auth-form {
-            padding: 2.5rem;
+
+        .hero-content h1 {
+            font-size: 60px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 135, 245, 0.8);
+            color: #168cf5;
         }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
-            padding: 0.75rem;
+
+        .hero-content p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+            color:#f7f7f7
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            font-size: 18px;
+            text-decoration: none;
+            background-color: #168cf5;
+            color: #ffffff;
+            border-radius: 5px;
+            transition: 0.3s;
+            text-transform: uppercase;
             font-weight: 600;
-            transition: all 0.3s ease;
         }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+
+        .cta-button:hover {
+            background-color: #5cadff;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(6, 143, 255, 0.3);
         }
-        
-        .form-control {
-            padding: 0.75rem 1rem;
+
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background-color: #ffffff;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 36px;
+            margin-bottom: 60px;
+            text-transform: uppercase;
+            color: #168cf5;
+        }
+
+        .features-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-box {
+            flex: 1 1 300px;
+            padding: 30px;
             border-radius: 10px;
-            border: 1px solid #e0e6ed;
-            transition: all 0.3s ease;
+            background-color: rgba(214, 214, 214, 0.8);
+            transition: 0.3s;
         }
-        
-        .form-control:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.15);
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0, 140, 255, 0.2);
         }
-        
-        .nav-tabs .nav-link {
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            color: #5a6d8a;
-            border: none;
+
+        .feature-box h3 {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #168cf5;
+        }
+
+        .feature-box p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            color: #168cf5;
+        }
+
+        /* Parallax City Section */
+        .parallax-city {
             position: relative;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
-        
-        .nav-tabs .nav-link.active {
-            color: var(--primary);
-            background: transparent;
-        }
-        
-        .nav-tabs .nav-link.active::after {
+
+        .parallax-city::before {
             content: "";
             position: absolute;
-            bottom: -1px;
+            top: 0;
             left: 0;
             width: 100%;
-            height: 3px;
-            background: var(--primary);
-            border-radius: 3px 3px 0 0;
+            height: 100%;
+            background: url('Grand Theft Auto V 5_11_2025 10_26_00 PM.png') center/cover no-repeat fixed;
+            z-index: -1;
         }
-        
-        .error-message {
-            background: #ffeded;
-            color: #e74c3c;
-            border-radius: 8px;
-            padding: 0.75rem;
-            margin-bottom: 1.25rem;
-            display: none;
+
+        .city-content {
+            max-width: 800px;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1;
         }
-        
-        .brand-text {
+
+        .city-content h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #168cf5;
+        }
+
+        .city-content p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        /* Server Info Section */
+        .server-info {
+            padding: 100px 0;
+            background-color: #ffffff;
+            text-align: center;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .stat-box {
+            flex: 1 1 200px;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: rgba(230, 230, 230, 0.8);
+            transition: 0.3s;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 140, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 48px;
             font-weight: 700;
-            color: var(--primary);
+            color: #168cf5;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
+        /* Parallax Cars Section */
+        .parallax-cars {
+            position: relative;
+            height: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .parallax-cars::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('Grand Theft Auto V 5_11_2025 10_25_41 PM.png') center/cover no-repeat fixed;
+            z-index: -1;
+        }
+
+        .cars-content {
+            max-width: 800px;
+            padding: 40px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .cars-content h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #168cf5;
+        }
+
+        .cars-content p {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        /* Gangs Section */
+        .gangs {
+            padding: 100px 0;
+            background-color: #ffffff;
+            text-align: center;
+        }
+
+        .gangs-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gang-box {
+            flex: 1 1 300px;
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .gang-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .gang-box:hover img {
+            transform: scale(1.1);
+        }
+
+        .gang-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .gang-info {
+            width: 100%;
+        }
+
+        .gang-info h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #168cf5;
+        }
+
+        .gang-info p {
+            font-size: 16px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.3s;
+            color: #ffffff;
+            background-color: #777
+        }
+
+        .gang-box:hover .gang-info p {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        footer {
+            background-color: #f7f7f7;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            margin: 20px 0;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: #168cf5;
+            color: #000000;
+            border-radius: 50%;
+            margin: 0 10px;
+            line-height: 40px;
+            transition: 0.3s;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-5px);
+            background-color: #5cadff;
+        }
+
+        .copyright {
+            margin-top: 20px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        /* Parallax Effect */
+        .parallax-effect {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease-out;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 40px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .feature-box, .stat-box {
+                flex: 1 1 100%;
+                margin-bottom: 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Animaties */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
         }
     </style>
 </head>
 <body>
-    <!-- Login/Registration Page -->
-    <div class="auth-container">
-        <div class="auth-header">
-            <h1><i class="fas fa-users me-2"></i>HRM <span class="brand-text">Systeem</span></h1>
-            <p class="mb-0 mt-2">Human Resource Management</p>
+    <!-- Header -->
+    <header>
+        <a href="#" class="logo">Utrecht RP</a>
+        <div class="nav-links">
+            <a href="#home"><b>Home</b></a>
+            <a href="wetboek.html"><b>Wetboek</b></a>
+            <a href="pornhub.com"><b>Tebex</b></a>
+            <a href="#contact"><b>Discords</b></a>
         </div>
-        
-        <div class="auth-form">
-            <div id="error-message" class="error-message"></div>
-            
-            <ul class="nav nav-tabs mb-4" id="authTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login" type="button" role="tab">Inloggen</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register" type="button" role="tab">Registreren</button>
-                </li>
-            </ul>
-            
-            <div class="tab-content" id="authTabContent">
-                <!-- Login Form -->
-                <div class="tab-pane fade show active" id="login" role="tabpanel">
-                    <div class="mb-3">
-                        <label for="login-email" class="form-label">E-mailadres</label>
-                        <input type="email" class="form-control" id="login-email" placeholder="naam@voorbeeld.nl">
-                    </div>
-                    <div class="mb-3">
-                        <label for="login-password" class="form-label">Wachtwoord</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="login-password" placeholder="••••••••">
-                            <button class="btn btn-outline-secondary" type="button" id="toggle-password">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="d-grid mb-3">
-                        <button class="btn btn-primary" id="login-btn">
-                            <i class="fas fa-sign-in-alt me-2"></i>Inloggen
-                        </button>
-                    </div>
-                    <div class="text-center">
-                        <a href="#" class="text-muted small">Wachtwoord vergeten?</a>
+    </header>
+
+    <!-- Hero Parallax Section -->
+    <section class="parallax-hero" id="home">
+        <div class="hero-content animate">
+            <h1>Utrecht Roleplay</h1>
+            <p>Welkom op de website van Utrecht Roleplay. Duik in de immersieve wereld van Utrecht Roleplay. Wij zijn een FiveM Stad waar JIJ voorop staat, of je nou crimineel bent of politie agent, er zijn overal mogelijkheden om te groeien!</p>
+            <a href="#" class="cta-button">Join Nu</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Wat maakt ons uniek</h2>
+        <div class="features-container">
+            <div class="feature-box animate">
+                <div class="feature-icon">🌆</div>
+                <h3>Uitgebreide Stad</h3>
+                <p>Ontdek onze volledig aangepaste stad met unieke locaties, interieurs en geheime plekken die je nergens anders vindt.</p>
+            </div>
+            <div class="feature-box animate">
+                <div class="feature-icon">👮</div>
+                <h3>Realistische Roleplay</h3>
+                <p>Ervaar een server waar roleplay op het hoogste niveau staat met geavanceerde scripts en toegewijde spelers.</p>
+            </div>
+            <div class="feature-box animate">
+                <div class="feature-icon">💼</div>
+                <h3>Diverse Banen</h3>
+                <p>Kies uit tientallen beroepen zoals politieagent, dokter, crimineel, zakenman en meer om je verhaal vorm te geven.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parallax City Section -->
+    <section class="parallax-city">
+        <div class="city-content animate">
+            <h2>Ontdek onze stad</h2>
+            <p>Een volledig aangepaste map met unieke locaties, interieurs en geheime plekken die je nergens anders vindt.</p>
+        </div>
+    </section>
+
+    <!-- Server Info Section -->
+    <section class="server-info" id="server">
+        <h2 class="section-title">Server Statistieken</h2>
+        <div class="stats-container">
+            <div class="stat-box animate">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Actieve Spelers</div>
+            </div>
+            <div class="stat-box animate">
+                <div class="stat-number">50+</div>
+                <div class="stat-label">Custom Auto's</div>
+            </div>
+           
+            <div class="stat-box animate">
+                <div class="stat-number">99.9%</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parallax Cars Section -->
+    <section class="parallax-cars">
+        <div class="cars-content animate">
+            <h2>Premium Voertuigen</h2>
+            <p>Van luxe sportwagens tot aangepaste unieke voertuigen - wij hebben het allemaal.</p>
+        </div>
+    </section>
+
+    <!-- Gangs Section -->
+    <section class="gangs" id="gangs">
+        <h2 class="section-title">Gangs & Organisaties</h2>
+        <div class="gangs-container">
+            <div class="gang-box animate">
+                <img src="gang1.png" alt="Gang 1">
+                <div class="gang-overlay">
+                    <div class="gang-info">
+                        <h3>Utrechtse Maffia</h3>
+                        <p>De gevreesde drugsorganisatie met connecties in heel Utrecht.</p>
                     </div>
                 </div>
-                
-                <!-- Registration Form -->
-                <div class="tab-pane fade" id="register" role="tabpanel">
-                    <div class="mb-3">
-                        <label for="reg-name" class="form-label">Volledige naam</label>
-                        <input type="text" class="form-control" id="reg-name" placeholder="Jan Jansen">
+            </div>
+            <div class="gang-box animate">
+                <img src="gang2.jpg" alt="Politie">
+                <div class="gang-overlay">
+                    <div class="gang-info">
+                        <h3>Politie</h3>
+                        <p>De elite van de wetshandhaving die de straten veilig houdt.</p>
                     </div>
-                    <div class="mb-3">
-                        <label for="reg-email" class="form-label">E-mailadres</label>
-                        <input type="email" class="form-control" id="reg-email" placeholder="naam@voorbeeld.nl">
-                    </div>
-                    <div class="mb-3">
-                        <label for="reg-password" class="form-label">Wachtwoord</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="reg-password" placeholder="••••••••">
-                            <button class="btn btn-outline-secondary" type="button" id="toggle-reg-password">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="reg-confirm-password" class="form-label">Bevestig wachtwoord</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="reg-confirm-password" placeholder="••••••••">
-                            <button class="btn btn-outline-secondary" type="button" id="toggle-confirm-password">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="d-grid">
-                        <button class="btn btn-primary" id="register-btn">
-                            <i class="fas fa-user-plus me-2"></i>Account aanmaken
-                        </button>
+                </div>
+            </div>
+            <div class="gang-box animate">
+                <img src="gang3.jpeg" alt="ambulance">
+                <div class="gang-overlay">
+                    <div class="gang-info">
+                        <h3>Ambulance</h3>
+                        <p>De echte helden van Utrecht. Ze staan altijd voor je klaar</p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Bootstrap & Firebase JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <h2>Onze Discords</h2>
+            <div class="social-links">
+                <a href="https://discord.gg/b4bK9dVKys">🌐</a>
+                <a href="https://discord.gg/QNEktpMmSg">🚔</a>
+                <a href="https://discord.gg/SHBhEkFn">⛓️</a>
+                <a href="https://discord.gg/XvBrM5UXku">🏢</a>
+                <a href="https://discord.gg/US952AbV">💎</a>
+            </div>
+            <p>Word onderdeel van een van de snelst groeiende GTA Roleplay communities.</p>
+            <p class="copyright">&copy; 2025 Utrecht Roleplay Community. Alle rechten voorbehouden.</p>
+        </div>
+    </footer>
+
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-              apiKey: "AIzaSyBl1JNsn64WjiPorFpCN48aboNdSzS1Py4",
-  authDomain: "utrechtcontracten.firebaseapp.com",
-  projectId: "utrechtcontracten",
-  storageBucket: "utrechtcontracten.firebasestorage.app",
-  messagingSenderId: "1088300511903",
-  appId: "1:1088300511903:web:f10ba519b201acc237a8aa",
-  measurementId: "G-ZRF8GZDNLV"
-        };
-        
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        
-        // DOM Elements
-        const loginBtn = document.getElementById('login-btn');
-        const registerBtn = document.getElementById('register-btn');
-        const errorMessage = document.getElementById('error-message');
-        
-        // Toggle password visibility
-        document.getElementById('toggle-password').addEventListener('click', function() {
-            const passwordInput = document.getElementById('login-password');
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-        });
-        
-        // Toggle registration password visibility
-        document.getElementById('toggle-reg-password').addEventListener('click', function() {
-            const passwordInput = document.getElementById('reg-password');
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-        });
-        
-        // Toggle confirm password visibility
-        document.getElementById('toggle-confirm-password').addEventListener('click', function() {
-            const passwordInput = document.getElementById('reg-confirm-password');
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
-        });
-        
-        // Show error message
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            setTimeout(() => {
-                errorMessage.style.display = 'none';
-            }, 5000);
-        }
-        
-        // Authentication State Listener
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                // Redirect to dashboard
-                window.location.href = 'dashboard.html';
-            }
-        });
-        
-        // Login Function
-        loginBtn.addEventListener('click', () => {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
+        // Parallax effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const parallaxElements = document.querySelectorAll('.parallax-hero, .parallax-city, .parallax-cars');
             
-            if (!email || !password) {
-                showError('Vul alstublieft zowel e-mail als wachtwoord in');
-                return;
-            }
-            
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    console.log('User logged in');
-                })
-                .catch(error => {
-                    let errorMessage = 'Login mislukt: ';
-                    switch (error.code) {
-                        case 'auth/user-not-found':
-                            errorMessage += 'Gebruiker niet gevonden';
-                            break;
-                        case 'auth/wrong-password':
-                            errorMessage += 'Onjuist wachtwoord';
-                            break;
-                        default:
-                            errorMessage += error.message;
-                    }
-                    showError(errorMessage);
-                });
-        });
-        
-        // Registration Function
-        registerBtn.addEventListener('click', () => {
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
-            const confirmPassword = document.getElementById('reg-confirm-password').value;
-            
-            if (!name || !email || !password || !confirmPassword) {
-                showError('Vul alstublieft alle velden in');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                showError('Wachtwoorden komen niet overeen');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showError('Wachtwoord moet minimaal 6 tekens bevatten');
-                return;
-            }
-            
-            // Determine role based on email
-            const role = email === 'admin@voorbeeld.nl' ? 'admin' : 'werknemer';
-            
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    const user = userCredential.user;
+            window.addEventListener('scroll', function() {
+                for (const element of parallaxElements) {
+                    const scrollPosition = window.pageYOffset;
+                    const elementPosition = element.offsetTop;
+                    const distance = elementPosition - scrollPosition;
+                    const parallaxSpeed = 0.5; // Adjust speed as needed
                     
-                    // Save additional user data to Firestore
-                    return db.collection('users').doc(user.uid).set({
-                        name: name,
-                        email: email,
-                        role: role,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                })
-                .then(() => {
-                    console.log('User registered and data saved');
-                })
-                .catch(error => {
-                    let errorMessage = 'Registratie mislukt: ';
-                    switch (error.code) {
-                        case 'auth/email-already-in-use':
-                            errorMessage += 'E-mailadres is al in gebruik';
-                            break;
-                        case 'auth/invalid-email':
-                            errorMessage += 'Ongeldig e-mailadres';
-                            break;
-                        default:
-                            errorMessage += error.message;
+                    if (element.querySelector('::before')) {
+                        element.style.backgroundPositionY = `${distance * parallaxSpeed}px`;
                     }
-                    showError(errorMessage);
+                }
+            });
+            
+            // Animation on scroll
+            const animateElements = document.querySelectorAll('.animate');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.animation = 'fadeIn 1s ease forwards';
+                    }
                 });
+            }, {
+                threshold: 0.1
+            });
+            
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Parallax effect op muisbeweging
+        document.addEventListener('mousemove', function(e) {
+            const parallaxLayers = document.querySelectorAll('.parallax-layer');
+            const mouseX = (e.clientX / window.innerWidth) * 100;
+            const mouseY = (e.clientY / window.innerHeight) * 100;
+            
+            parallaxLayers.forEach(layer => {
+                const speed = layer.getAttribute('data-speed') || 0.05;
+                const x = (mouseX - 50) * speed;
+                const y = (mouseY - 50) * speed;
+                
+                layer.style.transform = `translate(${x}px, ${y}px)`;
+            });
         });
     </script>
 </body>
