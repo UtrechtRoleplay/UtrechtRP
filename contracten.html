@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head><title>Login</title>
-    <script type="module" src="firebase.js"></script>
+    <script type="module" src="firebase-confi.js"></script>
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -18,6 +18,7 @@
   </div>
 
   <script type="module">
+    import { auth, db } from "./firebase-config.js";
     import {
       signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -29,11 +30,19 @@
     const password = document.getElementById('password');
 
     async function login() {
-      await signInWithEmailAndPassword(auth, email.value, password.value);
+      try {
+        await signInWithEmailAndPassword(auth, email.value, password.value);
+      } catch (error) {
+        alert("Fout bij inloggen: " + error.message);
+      }
     }
 
     async function register() {
-      await createUserWithEmailAndPassword(auth, email.value, password.value);
+      try {
+        await createUserWithEmailAndPassword(auth, email.value, password.value);
+      } catch (error) {
+        alert("Fout bij registreren: " + error.message);
+      }
     }
 
     onAuthStateChanged(auth, async user => {
