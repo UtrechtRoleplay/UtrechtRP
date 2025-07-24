@@ -1,388 +1,59 @@
 <!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HRM Systeem - Inloggen</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            min-height: 100vh;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .auth-container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 450px;
-            overflow: hidden;
-            animation: fadeIn 0.6s ease;
-        }
-        
-        .auth-header {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            padding: 30px 20px;
-            text-align: center;
-        }
-        
-        .auth-header h2 {
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-        
-        .logo {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: white;
-            background: rgba(255, 255, 255, 0.2);
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-        }
-        
-        .auth-body {
-            padding: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-control {
-            border-radius: 12px;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
-        }
-        
-        .form-control:focus {
-            border-color: #6a11cb;
-            box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.2);
-        }
-        
-        .btn {
-            border-radius: 12px;
-            padding: 12px 20px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            border: none;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
-        }
-        
-        .btn-outline-secondary {
-            border: 1px solid #e0e0e0;
-        }
-        
-        .password-container {
-            position: relative;
-        }
-        
-        .password-toggle {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #777;
-        }
-        
-        .status-message {
-            text-align: center;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-        
-        .status-message.success {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: #28a745;
-            display: block;
-        }
-        
-        .status-message.error {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #dc3545;
-            display: block;
-        }
-        
-        .additional-links {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: #777;
-        }
-        
-        .additional-links a {
-            color: #6a11cb;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .features {
-            display: flex;
-            margin-top: 30px;
-            gap: 15px;
-        }
-        
-        .feature {
-            flex: 1;
-            text-align: center;
-            padding: 15px;
-            border-radius: 12px;
-            background: rgba(106, 17, 203, 0.05);
-        }
-        
-        .feature i {
-            font-size: 1.8rem;
-            color: #6a11cb;
-            margin-bottom: 10px;
-        }
-        
-        .feature h5 {
-            font-size: 0.95rem;
-            margin-bottom: 5px;
-        }
-        
-        .feature p {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 0;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        @media (max-width: 576px) {
-            .auth-container {
-                margin: 20px;
-                max-width: 100%;
-            }
-            
-            .features {
-                flex-direction: column;
-            }
-        }
-    </style>
-</head>
+<html>
+<head><title>Login</title></head>
 <body>
-    <div class="auth-container">
-        <div class="auth-header">
-            <div class="logo">
-                <i class="fas fa-users"></i>
-            </div>
-            <h2>HRM Systeem</h2>
-            <p>Personeelsbeheer op het hoogste niveau</p>
-        </div>
-        
-        <div class="auth-body">
-            <div class="status-message" id="msg"></div>
-            
-            <div id="loginForm">
-                <div class="form-group">
-                    <label for="email" class="form-label">E-mailadres</label>
-                    <input type="email" id="email" class="form-control" placeholder="email@voorbeeld.nl">
-                </div>
-                
-                <div class="form-group">
-                    <label for="password" class="form-label">Wachtwoord</label>
-                    <div class="password-container">
-                        <input type="password" id="password" class="form-control" placeholder="Uw wachtwoord">
-                        <span class="password-toggle" id="togglePassword">
-                            <i class="far fa-eye"></i>
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="d-grid gap-2 mb-3">
-                    <button id="loginBtn" class="btn btn-primary">Inloggen</button>
-                </div>
-                
-                <div class="d-grid gap-2">
-                    <button id="registerBtn" class="btn btn-outline-secondary">Registreren</button>
-                </div>
-                
-                <div class="additional-links mt-3">
-                    <a href="#" id="forgotPassword">Wachtwoord vergeten?</a>
-                </div>
-            </div>
-            
-            <div class="features">
-                <div class="feature">
-                    <i class="fas fa-shield-alt"></i>
-                    <h5>Veilig</h5>
-                    <p>Gegevensbescherming gegarandeerd</p>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-bolt"></i>
-                    <h5>Snel</h5>
-                    <p>Efficiënte workflows</p>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-sync-alt"></i>
-                    <h5>Realtime</h5>
-                    <p>Altijd up-to-date</p>
-                </div>
-            </div>
-        </div>
-    </div>
+  <h2>Login of registreer</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Wachtwoord">
+  <button onclick="login()">Login</button>
+  <button onclick="register()">Registreer</button>
 
-    <script type="module">
-        // Importeer Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-        
-        // Firebase configuratie
-        const firebaseConfig = {
-              apiKey: "AIzaSyBl1JNsn64WjiPorFpCN48aboNdSzS1Py4",
-  authDomain: "utrechtcontracten.firebaseapp.com",
-  projectId: "utrechtcontracten",
-  storageBucket: "utrechtcontracten.firebasestorage.app",
-  messagingSenderId: "1088300511903",
-  appId: "1:1088300511903:web:f10ba519b201acc237a8aa",
-  measurementId: "G-ZRF8GZDNLV"
-        };
+  <div id="namePrompt" style="display:none;">
+    <input type="text" id="nameInput" placeholder="Jouw naam">
+    <button onclick="saveName()">Opslaan</button>
+  </div>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+  <script type="module" src="firebase.js"></script>
+  <script type="module">
+    import {
+      signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import {
+      doc, setDoc, getDoc
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-        // DOM elementen
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
-        const loginBtn = document.getElementById('loginBtn');
-        const registerBtn = document.getElementById('registerBtn');
-        const msgElement = document.getElementById('msg');
-        const togglePassword = document.getElementById('togglePassword');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
 
-        // Wachtwoord zichtbaarheid
-        togglePassword.addEventListener('click', () => {
-            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput.setAttribute('type', type);
-            togglePassword.innerHTML = type === 'password' ? 
-                '<i class="far fa-eye"></i>' : 
-                '<i class="far fa-eye-slash"></i>';
-        });
+    async function login() {
+      await signInWithEmailAndPassword(auth, email.value, password.value);
+    }
 
-        // Toon bericht
-        function showMessage(text, type) {
-            msgElement.textContent = text;
-            msgElement.className = `status-message ${type}`;
+    async function register() {
+      await createUserWithEmailAndPassword(auth, email.value, password.value);
+    }
+
+    onAuthStateChanged(auth, async user => {
+      if (user) {
+        const userRef = doc(db, "users", user.uid);
+        const snap = await getDoc(userRef);
+        if (!snap.exists()) {
+          document.getElementById("namePrompt").style.display = "block";
+        } else {
+          window.location.href = "dashboard.html";
         }
+      }
+    });
 
-        // Inlogfunctie
-        loginBtn.addEventListener('click', async () => {
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            
-            if (!email || !password) {
-                showMessage('Vul alle velden in', 'error');
-                return;
-            }
-            
-            try {
-                showMessage('Inloggen...', 'success');
-                await signInWithEmailAndPassword(auth, email, password);
-                
-                // Doorsturen naar dashboard
-                window.location.href = "dashboard.html";
-            } catch (error) {
-                let errorMessage;
-                switch (error.code) {
-                    case 'auth/invalid-email':
-                        errorMessage = 'Ongeldig e-mailadres';
-                        break;
-                    case 'auth/user-not-found':
-                        errorMessage = 'Gebruiker niet gevonden';
-                        break;
-                    case 'auth/wrong-password':
-                        errorMessage = 'Onjuist wachtwoord';
-                        break;
-                    default:
-                        errorMessage = 'Inloggen mislukt, probeer later opnieuw';
-                }
-                showMessage(errorMessage, 'error');
-            }
-        });
-
-        // Registratiefunctie
-        registerBtn.addEventListener('click', async () => {
-            const email = emailInput.value;
-            const password = passwordInput.value;
-            
-            if (!email || !password) {
-                showMessage('Vul alle velden in', 'error');
-                return;
-            }
-            
-            if (password.length < 6) {
-                showMessage('Wachtwoord moet minstens 6 tekens bevatten', 'error');
-                return;
-            }
-            
-            try {
-                showMessage('Account aanmaken...', 'success');
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                
-                // Standaardrol: werknemer (behalve voor admin@voorbeeld.nl)
-                const role = email === "admin@voorbeeld.nl" ? "admin" : "werknemer";
-                
-                // Gebruikersgegevens opslaan in Firestore
-                await setDoc(doc(db, "users", user.uid), {
-                    email: user.email,
-                    role: role,
-                    name: user.email.split('@')[0],
-                    createdAt: new Date().toISOString()
-                });
-                
-                showMessage('Account succesvol aangemaakt! U wordt ingelogd...', 'success');
-                
-                // Doorsturen naar dashboard na korte vertraging
-                setTimeout(() => {
-                    window.location.href = "dashboard.html";
-                }, 1500);
-            } catch (error) {
-                let errorMessage;
-                switch (error.code) {
-                    case 'auth/email-already-in-use':
-                        errorMessage = 'E-mailadres is al in gebruik';
-                        break;
-                    case 'auth/weak-password':
-                        errorMessage = 'Wachtwoord is te zwak';
-                        break;
-                    case 'auth/invalid-email':
-                        errorMessage = 'Ongeldig e-mailadres';
-                        break;
-                    default:
-                        errorMessage = 'Registratie mislukt, probeer later opnieuw';
-                }
-                showMessage(errorMessage, 'error');
-            }
-        });
-    </script>
+    async function saveName() {
+      const name = document.getElementById("nameInput").value;
+      await setDoc(doc(db, "users", auth.currentUser.uid), {
+        email: auth.currentUser.email,
+        name: name,
+        role: auth.currentUser.email === "ohaarens@gmail.com" ? "admin" : "werknemer"
+      });
+      window.location.href = "dashboard.html";
+    }
+  </script>
 </body>
 </html>
